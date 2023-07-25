@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
 
 import styles from './screenHeaderButton.style';
@@ -14,8 +14,6 @@ const ScreenHeaderBtn = ({
   dimension,
   handlePress,
 }: ScreenHeaderBtnProps) => {
-  console.log(' ScreenHeaderBtn', iconUrl, dimension, handlePress);
-
   return (
     <TouchableOpacity style={styles.btnContainer} onPress={handlePress}>
       <Image

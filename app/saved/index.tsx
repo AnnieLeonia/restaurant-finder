@@ -2,12 +2,11 @@ import React from 'react';
 import { Text, SafeAreaView, ScrollView, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 
-import { Header, Nav, SearchBar } from '../components';
+import { Header, Nav } from '../../components';
+import { COLORS } from '../../constants';
+import styles from '../../styles/saved';
 
-import { COLORS } from '../constants';
-import styles from '../styles/home';
-
-const Home = () => {
+const Saved = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen
@@ -16,15 +15,19 @@ const Home = () => {
         }}
       />
       <Header>
-        <SearchBar />
+        <Text style={styles.headerText}>Saved</Text>
       </Header>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollContainer}
       >
-        <View>
-          <Text>This is the home page!</Text>
+        <View style={{ flex: 1 }}>
+          <Text>1 Saved item</Text>
+          <Text>2 Saved item</Text>
+          <Text>3 Saved item</Text>
+          <Text>4 Saved item</Text>
+          <Text>5 Saved item</Text>
         </View>
       </ScrollView>
 
@@ -33,4 +36,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Saved;

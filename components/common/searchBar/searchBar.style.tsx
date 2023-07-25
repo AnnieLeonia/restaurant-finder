@@ -1,0 +1,42 @@
+import { StyleSheet } from 'react-native';
+
+import { COLORS, SIZES, FONT } from '../../../constants';
+
+const styles = StyleSheet.create<any>({
+  container: {
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
+    height: '100px',
+    width: '100%',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    height: 50,
+  },
+  searchWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: COLORS.white,
+    marginRight: SIZES.small,
+    marginLeft: SIZES.small,
+    borderRadius: SIZES.medium,
+    height: '100%',
+  },
+  searchInput: {
+    fontFamily: FONT.regular,
+    width: '100%',
+    height: '100%',
+    paddingHorizontal: SIZES.medium,
+  },
+  searchBtn: {
+    width: '40px',
+    height: '100%',
+    justifyContent: 'center',
+  },
+  searchIcon: {
+    width: '80%',
+    height: '80%',
+  },
+});
+
+export default styles;
