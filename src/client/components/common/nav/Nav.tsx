@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 
 import styles from './nav.style';
 
-import { icons } from '../../../constants';
+import { icons } from '@/client/constants';
 
 const Nav = () => {
   const router = useRouter();

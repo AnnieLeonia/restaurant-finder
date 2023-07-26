@@ -2,10 +2,10 @@ import React from 'react';
 import { Image, Text, SafeAreaView, ScrollView, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 
-import { Header, Nav, SearchBar } from '../../components';
+import { Header, Nav, SearchBar } from '@/client/components';
 
-import { COLORS, icons } from '../../constants';
-import styles from '../../styles/profile';
+import { COLORS, icons } from '@/client/constants';
+import styles from '@/client/styles/profile';
 
 const Profile = () => {
   const router = useRouter();

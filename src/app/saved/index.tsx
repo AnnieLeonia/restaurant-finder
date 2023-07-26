@@ -2,9 +2,9 @@ import React from 'react';
 import { Text, SafeAreaView, ScrollView, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 
-import { Header, Nav } from '../../components';
-import { COLORS } from '../../constants';
-import styles from '../../styles/saved';
+import { Header, Nav } from '@/client/components';
+import { COLORS } from '@/client/constants';
+import styles from '@/client/styles/saved';
 
 const Saved = () => {
   return (

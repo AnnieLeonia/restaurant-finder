@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { icons } from '../../../constants';
+import { icons } from '@/client/constants';
 
 import styles from './searchBar.style';
 
