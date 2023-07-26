@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@types/react": "~18.2.14",
@@ -34,7 +35,9 @@
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
-    "prettier": "^3.0.0"
+    "lint-staged": "^13.2.3",
+    "prettier": "^3.0.0",
+    "husky": "^8.0.0"
   },
   "resolutions": {
     "metro": "^0.73.7",
