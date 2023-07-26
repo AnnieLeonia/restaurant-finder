@@ -24,7 +24,7 @@ const styles = StyleSheet.create<any>({
   },
   searchInput: {
     fontFamily: FONT.regular,
-    width: '100%',
+    flex: 1,
     height: '100%',
     paddingHorizontal: SIZES.medium,
   },
