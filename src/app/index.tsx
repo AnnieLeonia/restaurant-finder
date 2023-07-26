@@ -28,22 +28,17 @@ const Home = () => {
         <SearchBar />
       </Header>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollContainer}
-      >
-        <View>
-          <FlatList
-            data={categories}
-            renderItem={({ item }) => (
-              <CategoryCard image={item.image} title={item.title} />
-            )}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
-      </ScrollView>
+      <View style={styles.categoryList}>
+        <FlatList
+          data={categories}
+          renderItem={({ item }) => (
+            <CategoryCard image={item.image} title={item.title} />
+          )}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
 
       <Nav />
     </SafeAreaView>

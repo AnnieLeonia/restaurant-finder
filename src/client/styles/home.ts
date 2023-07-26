@@ -7,10 +7,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
-  scrollContainer: {
+  categoryList: {
     backgroundColor: COLORS.secondary,
+    flex: 1,
   },
-  categoryList: {},
 });
 
 export default styles;
