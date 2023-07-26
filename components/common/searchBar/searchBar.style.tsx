@@ -6,7 +6,7 @@ const styles = StyleSheet.create<any>({
   container: {
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
-    height: '100px',
+    height: 100,
     width: '100%',
   },
   searchContainer: {
@@ -29,7 +29,7 @@ const styles = StyleSheet.create<any>({
     paddingHorizontal: SIZES.medium,
   },
   searchBtn: {
-    width: '40px',
+    width: 40,
     height: '100%',
     justifyContent: 'center',
   },

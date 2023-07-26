@@ -4,7 +4,7 @@ import { COLORS } from '../../../constants';
 
 const styles = StyleSheet.create<any>({
   container: {
-    height: '100px',
+    height: 100,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
