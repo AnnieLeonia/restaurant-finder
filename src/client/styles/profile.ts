@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import { COLORS, SIZES } from '../constants/theme';
+import { COLORS, SIZES } from "../constants/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -14,11 +14,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     padding: SIZES.small,
     borderRadius: 100,
-    border: '4px solid #000',
+    border: "4px solid #000",
   },
   profileIcon: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   scrollContainer: {
     paddingTop: 50,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   profileInformationContainer: {
     padding: SIZES.small,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 
