@@ -2,10 +2,10 @@ import React from 'react';
 import { FlatList, SafeAreaView, ScrollView, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 
-import { CategoryCard, Header, Nav, SearchBar } from '../components';
+import { CategoryCard, Header, Nav, SearchBar } from '@/client/components';
 
-import { icons } from '../constants';
-import styles from '../styles/home';
+import { icons } from '@/client/constants';
+import styles from '@/client/styles/home';
 
 const categories = [
   { id: '1', title: 'Pizza', image: icons.pizza },
