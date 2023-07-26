@@ -29,7 +29,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
-    "@babel/plugin-proposal-export-namespace-from": "^7.18.9"
+    "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+    "@react-native-community/eslint-config": "^3.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^3.0.0"
   },
   "resolutions": {
     "metro": "^0.73.7",
