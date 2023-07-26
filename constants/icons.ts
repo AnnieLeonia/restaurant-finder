@@ -11,6 +11,12 @@ import chevronRight from '../assets/icons/chevron-right.png';
 import profile from '../assets/icons/profile.png';
 import home from '../assets/icons/home.png';
 import saved from '../assets/icons/saved.png';
+import pizza from '../assets/icons/pizza.png';
+import coffee from '../assets/icons/coffee.png';
+import bar from '../assets/icons/bar.png';
+import sushi from '../assets/icons/sushi.png';
+import noodles from '../assets/icons/noodles.png';
+import burger from '../assets/icons/burger.png';
 
 export default {
   heart,
@@ -26,4 +32,10 @@ export default {
   profile,
   home,
   saved,
+  pizza,
+  coffee,
+  bar,
+  sushi,
+  noodles,
+  burger,
 };

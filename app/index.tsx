@@ -1,11 +1,20 @@
 import React from 'react';
-import { Text, SafeAreaView, ScrollView, View } from 'react-native';
+import { FlatList, SafeAreaView, ScrollView, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 
-import { Header, Nav, SearchBar } from '../components';
+import { CategoryCard, Header, Nav, SearchBar } from '../components';
 
-import { COLORS } from '../constants';
+import { icons } from '../constants';
 import styles from '../styles/home';
+
+const categories = [
+  { id: '1', title: 'Pizza', image: icons.pizza },
+  { id: '2', title: 'Bar', image: icons.bar },
+  { id: '3', title: 'Café', image: icons.coffee },
+  { id: '4', title: 'Sushi', image: icons.sushi },
+  { id: '5', title: 'Hamburgers', image: icons.burger },
+  { id: '6', title: 'Asian', image: icons.noodles },
+];
 
 const Home = () => {
   return (
@@ -24,7 +33,15 @@ const Home = () => {
         style={styles.scrollContainer}
       >
         <View>
-          <Text>This is the home page!</Text>
+          <FlatList
+            data={categories}
+            renderItem={({ item }) => (
+              <CategoryCard image={item.image} title={item.title} />
+            )}
+            numColumns={2}
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
       </ScrollView>
 
