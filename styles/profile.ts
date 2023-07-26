@@ -8,9 +8,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   profileIconWrapper: {
-    width: '100px',
-    height: '100px',
-    marginTop: '100px',
+    width: 100,
+    height: 100,
+    marginTop: 100,
     backgroundColor: COLORS.white,
     padding: SIZES.small,
     borderRadius: 100,
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   scrollContainer: {
-    paddingTop: '50px',
+    paddingTop: 50,
     backgroundColor: COLORS.secondary,
   },
   profileInformationContainer: {

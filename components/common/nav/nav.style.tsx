@@ -4,7 +4,7 @@ import { COLORS, SIZES } from '../../../constants';
 
 const styles = StyleSheet.create<any>({
   container: {
-    height: '100px',
+    height: 100,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -13,8 +13,8 @@ const styles = StyleSheet.create<any>({
     alignItems: 'center',
   },
   navIcon: {
-    width: '30px',
-    height: '30px',
+    width: 30,
+    height: 30,
   },
 });
 
