@@ -1,8 +1,7 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import { useCallback } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-import { View } from 'react-native';
+import { useEffect } from 'react';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -13,9 +12,9 @@ const Layout = () => {
     DMRegular: require('../assets/fonts/DMSans-Regular.ttf'),
   });
 
-  const onLayoutRootView = useCallback(async () => {
+  useEffect(() => {
     if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+      SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
 
@@ -23,11 +22,7 @@ const Layout = () => {
     return null;
   }
 
-  return (
-    <Stack>
-      <View onLayout={onLayoutRootView} />
-    </Stack>
-  );
+  return <Stack />;
 };
 
 export default Layout;
