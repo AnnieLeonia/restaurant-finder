@@ -95,7 +95,7 @@ router.get("/api/restaurants", async (req, res) => {
             address: establishment.vicinity,
             open_now: establishment.opening_hours?.open_now,
             price_level: establishment.price_level,
-            photos: establishment.photos.map(
+            photos: (establishment.photos || []).map(
               photo => `/api/photo/${photo.photo_reference}`,
             ),
             location: new Geolocation(establishment.geometry.location),
@@ -134,7 +134,7 @@ router.get("/api/restaurants", async (req, res) => {
 
     cache.set<RestaurantsResponse>(cacheKey, data);
     return res.json(data);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching data:", error);
     return res.status(500).json({ message: error.message });
   }
@@ -151,7 +151,7 @@ router.get("/api/photo/:id", async (req, res) => {
     });
 
     return res.redirect(`${photoApiUrl}?${params.toString()}`);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching data:", error);
     return res.status(500).json({ message: error.message });
   }

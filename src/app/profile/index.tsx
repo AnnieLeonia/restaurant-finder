@@ -1,4 +1,4 @@
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import React from "react";
 import { Image, SafeAreaView, ScrollView, Text, View } from "react-native";
 
@@ -7,8 +7,6 @@ import { icons } from "@/client/constants";
 import styles from "@/client/styles/profile";
 
 const Profile = () => {
-  const router = useRouter();
-
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen
