@@ -1,24 +1,28 @@
-import { useRouter } from "expo-router";
 import React from "react";
-import { Image, ImageSourcePropType, Text, View } from "react-native";
+import {
+  Image,
+  ImageSourcePropType,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 
 import styles from "./categoryCard.style";
 
 interface CategoryCardProps {
   image: ImageSourcePropType;
   title: string;
+  handleCardPress: () => void;
 }
 
-const CategoryCard = ({ image, title }: CategoryCardProps) => {
-  const router = useRouter();
-
+const CategoryCard = ({ image, title, handleCardPress }: CategoryCardProps) => {
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={() => handleCardPress()}>
       <View style={styles.cardImageWrapper}>
         <Image source={image} style={styles.cardImage} />
       </View>
       <Text style={styles.cardText}>{title}</Text>
-    </View>
+    </Pressable>
   );
 };
 
