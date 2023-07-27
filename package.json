@@ -11,6 +11,7 @@
     "watch:server": "nodemon server",
     "watch:web": "expo start --web",
     "dev": "npm-run-all --parallel watch:*",
+    "type-check": "tsc --noEmit && eslint .",
     "prepare": "husky install",
     "postinstall": "webpack && expo export"
   },
