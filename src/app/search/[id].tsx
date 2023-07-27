@@ -62,14 +62,16 @@ const Search = () => {
         <View>
           {isLoadingCoords ? (
             <ActivityIndicator size="large" color={COLORS.primary} />
-          ) : errorMsg ? (
-            <Text>{errorMsg}</Text>
-          ) : (
+          ) : location ? (
             <View>
-              <RestaurantList />
-              <Text>{location?.lat}</Text>
-              <Text>{location?.lng}</Text>
+              <RestaurantList
+                lat={location.lat}
+                lng={location.lng}
+                keyword={params.id as string}
+              />
             </View>
+          ) : (
+            <Text>{errorMsg}</Text>
           )}
         </View>
       </View>

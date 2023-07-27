@@ -1,18 +1,31 @@
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
-import useFetchRestaurant from "@/client//hook/useFetchRestaurant";
+import useFetchRestaurant, {
+  RestaurantRequestProps,
+} from "@/client//hook/useFetchRestaurant";
+import { COLORS } from "@/client/constants";
 
 import styles from "./restaurantList.style";
 
-const RestaurantList = () => {
-  const { data, isLoading, error } = useFetchRestaurant();
+const RestaurantList = ({
+  lat,
+  lng,
+  keyword,
+  distance,
+}: RestaurantRequestProps) => {
+  const { data, isLoading, error } = useFetchRestaurant({
+    lat,
+    lng,
+    keyword,
+    distance,
+  });
 
   return (
     <View style={styles.container}>
       <View>
         {isLoading ? (
-          <Text>Loading...</Text>
+          <ActivityIndicator size="large" color={COLORS.primary} />
         ) : error ? (
           <Text>{error}</Text>
         ) : (
