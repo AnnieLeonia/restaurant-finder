@@ -1,0 +1,18 @@
+#!/bin/bash
+set -eu # exit script on errors
+
+echo "copy restaurant-finder env"
+rsync /home/git/www/restaurant-finder/.env .
+
+# Function to retrieve dependency versions
+get_dependencies() {
+  node -pe "'$1'.split(' ').map(dep => dep + '@' + require('./package').dependencies[dep]).join(' ')"
+}
+
+# server dependencies
+deps=$(get_dependencies "express node-cache node-fetch dotenv")
+
+echo "install server dependencies: $deps"
+npm install --production --no-package-lock --no-save $deps
+
+export MAIN="server/index.js"
