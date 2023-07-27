@@ -1,7 +1,7 @@
-import React from 'react';
-import { TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
+import React from "react";
+import { Image, ImageSourcePropType, TouchableOpacity } from "react-native";
 
-import styles from './screenHeaderButton.style';
+import styles from "./screenHeaderButton.style";
 
 interface ScreenHeaderBtnProps {
   iconUrl: ImageSourcePropType;
@@ -18,7 +18,7 @@ const ScreenHeaderBtn = ({
     <TouchableOpacity style={styles.btnContainer} onPress={handlePress}>
       <Image
         source={iconUrl}
-        resizeMode='cover'
+        resizeMode="cover"
         style={styles.btnImg(dimension)}
       />
     </TouchableOpacity>

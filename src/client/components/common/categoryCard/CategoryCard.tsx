@@ -1,8 +1,8 @@
-import React from 'react';
-import { Image, ImageSourcePropType, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
+import React from "react";
+import { Image, ImageSourcePropType, Text, View } from "react-native";
 
-import styles from './categoryCard.style';
+import styles from "./categoryCard.style";
 
 interface CategoryCardProps {
   image: ImageSourcePropType;

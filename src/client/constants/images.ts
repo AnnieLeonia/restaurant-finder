@@ -1,4 +1,4 @@
-import favicon from '../assets/images/favicon.png';
+import favicon from "../assets/images/favicon.png";
 
 export default {
   favicon,

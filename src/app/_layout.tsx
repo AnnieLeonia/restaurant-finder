@@ -1,15 +1,15 @@
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
 const Layout = () => {
   const [fontsLoaded] = useFonts({
-    DMBold: require('@/client/assets/fonts/DMSans-Bold.ttf'),
-    DMMedium: require('@/client/assets/fonts/DMSans-Medium.ttf'),
-    DMRegular: require('@/client/assets/fonts/DMSans-Regular.ttf'),
+    DMBold: require("@/client/assets/fonts/DMSans-Bold.ttf"),
+    DMMedium: require("@/client/assets/fonts/DMSans-Medium.ttf"),
+    DMRegular: require("@/client/assets/fonts/DMSans-Regular.ttf"),
   });
 
   useEffect(() => {

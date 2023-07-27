@@ -1,11 +1,10 @@
-import React from 'react';
-import { Image, Text, SafeAreaView, ScrollView, View } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter } from "expo-router";
+import React from "react";
+import { Image, SafeAreaView, ScrollView, Text, View } from "react-native";
 
-import { Header, Nav, SearchBar } from '@/client/components';
-
-import { COLORS, icons } from '@/client/constants';
-import styles from '@/client/styles/profile';
+import { Header, Nav } from "@/client/components";
+import { icons } from "@/client/constants";
+import styles from "@/client/styles/profile";
 
 const Profile = () => {
   const router = useRouter();
@@ -21,7 +20,7 @@ const Profile = () => {
         <View style={styles.profileIconWrapper}>
           <Image
             source={icons.profile}
-            resizeMode='contain'
+            resizeMode="contain"
             style={styles.profileIcon}
           />
         </View>

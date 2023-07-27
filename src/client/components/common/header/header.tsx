@@ -1,8 +1,8 @@
-import React from 'react';
-import { View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
+import React from "react";
+import { View } from "react-native";
 
-import styles from './header.style';
+import styles from "./header.style";
 
 const Header = ({ children }: any) => {
   const router = useRouter();

@@ -1,10 +1,9 @@
-import React from 'react';
-import { Text, SafeAreaView, ScrollView, View } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from "expo-router";
+import React from "react";
+import { SafeAreaView, ScrollView, Text, View } from "react-native";
 
-import { Header, Nav } from '@/client/components';
-import { COLORS } from '@/client/constants';
-import styles from '@/client/styles/saved';
+import { Header, Nav } from "@/client/components";
+import styles from "@/client/styles/saved";
 
 const Saved = () => {
   return (
