@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, TextInput, View } from "react-native";
 
 import { icons } from "@/client/constants";
 
@@ -16,13 +16,13 @@ const SearchBar = () => {
             // onChangeText={(text) => setSearchTerm(text)}
             placeholder="What are you looking for?"
           />
-          <TouchableOpacity style={styles.searchBtn} /*onPress={handleClick}*/>
+          <Pressable style={styles.searchBtn} /*onPress={handleClick}*/>
             <Image
               source={icons.search}
               resizeMode="contain"
               style={styles.searchIcon}
             />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </View>
