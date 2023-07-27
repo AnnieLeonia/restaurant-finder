@@ -2,7 +2,7 @@ name: Deploy
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
@@ -40,4 +40,4 @@ jobs:
           git config --global user.name "Github Actions"
           git add server dist -f
           git commit -m "Build files"
-          git push -u server HEAD:master -f
+          git push -u server HEAD:main -f
