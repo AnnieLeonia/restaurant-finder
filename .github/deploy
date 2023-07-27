@@ -10,7 +10,7 @@ get_dependencies() {
 }
 
 # server dependencies
-deps=$(get_dependencies "express node-cache node-fetch dotenv")
+deps=$(get_dependencies "express node-cache node-fetch cors dotenv")
 
 echo "install server dependencies: $deps"
 npm install --production --no-package-lock --no-save $deps
