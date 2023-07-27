@@ -2,9 +2,14 @@ import * as express from "express";
 import * as NodeCache from "node-cache";
 import fetch from "node-fetch";
 
-import Geolocation from "./geolocation";
-import { PlaceSearchResponse, Restaurant, RestaurantsResponse } from "./types";
-import { getStringQueryParam, uniqueArray } from "./utils";
+import Geolocation from "../common/geolocation";
+import {
+  PlaceSearchResponse,
+  Restaurant,
+  RestaurantsResponse,
+} from "../common/types";
+import { uniqueArray } from "../common/utils";
+import { getStringQueryParam } from "./utils";
 
 const apiKey = process.env.GOOGLE_PLACES_API_KEY;
 
