@@ -2,14 +2,14 @@
 
 ## :bookmark_tabs: Table of Contents
 
-- [:fork_and_knife: Restaurant Finder](#-fork-and-knife--restaurant-finder)
-  - [:bookmark_tabs: Table of Contents](#-bookmark-tabs--table-of-contents)
-  - [:running: Running the Project](#-running--running-the-project)
-  - [:cloud: Server](#-cloud--server)
-  - [:computer: Client](#-computer--client)
-  - [:iphone: App](#-iphone--app)
-  - [:wrench: Configuration Files](#-wrench--configuration-files)
-  - [:memo: Notes](#-memo--notes)
+- [:fork_and_knife: Restaurant Finder](#fork-and-knife-restaurant-finder)
+  - [:bookmark_tabs: Table of Contents](#bookmark-tabs-table-of-contents)
+  - [:running: Running the Project](#running-running-the-project)
+  - [:cloud: Server](#cloud-server)
+  - [:computer: Client](#computer-client)
+  - [:iphone: App](#iphone-app)
+  - [:wrench: Configuration Files](#wrench-configuration-files)
+  - [:memo: Notes](#memo-notes)
 
 ## :running: Running the Project
 
