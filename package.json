@@ -7,17 +7,24 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "prepare": "husky install"
+    "watch:build": "webpack -w",
+    "watch:server": "nodemon server",
+    "watch:web": "expo start --web",
+    "dev": "npm-run-all --parallel watch:*",
+    "prepare": "husky install",
+    "postinstall": "webpack && expo export"
   },
   "dependencies": {
-    "@types/react": "~18.2.14",
-    "@types/react-native": "^0.72.2",
+    "dotenv": "^16.3.1",
     "expo": "^49.0.5",
     "expo-constants": "~14.4.2",
     "expo-linking": "~5.0.2",
     "expo-router": "2.0.0",
     "expo-splash-screen": "~0.20.4",
     "expo-status-bar": "~1.6.0",
+    "express": "^4.18.2",
+    "node-cache": "^5.1.2",
+    "node-fetch": "^2.6.12",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.72.3",
@@ -33,6 +40,10 @@
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@react-native-community/eslint-config": "^3.2.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "@types/express": "^4.17.17",
+    "@types/node-fetch": "^2.6.4",
+    "@types/react": "^18.2.17",
+    "@types/react-native": "^0.72.2",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
@@ -41,7 +52,13 @@
     "eslint-plugin-unused-imports": "^3.0.0",
     "husky": "^8.0.0",
     "lint-staged": "^13.2.3",
-    "prettier": "^2.8.8"
+    "nodemon": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.8",
+    "ts-loader": "^9.4.4",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
   },
   "resolutions": {
     "metro": "^0.73.7",
@@ -52,6 +69,5 @@
     "metro": "^0.73.7",
     "metro-resolver": "^0.73.7",
     "react-refresh": "~0.14.0"
-  },
-  "private": true
+  }
 }
