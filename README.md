@@ -17,6 +17,7 @@ To run the project, follow these steps:
 
 1. Install the dependencies by running `npm install`.
 2. Start the project with `npm run dev`.
+3. Access the client at http://localhost:8081.
 3. Access the server at http://localhost:3000.
 
 ## :cloud: Server
