@@ -25,6 +25,7 @@ const styles = StyleSheet.create<any>({
     height: "60%",
   },
   cardText: {
+    textTransform: "capitalize",
     fontSize: SIZES.large,
   },
 });
