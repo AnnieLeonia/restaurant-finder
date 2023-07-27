@@ -1,4 +1,4 @@
-import Geolocation from "../common/geolocation";
+import Geolocation from "./geolocation";
 
 export interface Restaurant {
   name: string;
@@ -39,7 +39,7 @@ export interface Establishment {
   icon_mask_base_uri: string;
   name: string;
   opening_hours?: OpeningHours;
-  photos?: Photo[];
+  photos: Photo[];
   place_id: string;
   plus_code: PlusCode;
   price_level: number;
