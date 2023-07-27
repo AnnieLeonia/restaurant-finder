@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, ImageSourcePropType, TouchableOpacity } from "react-native";
+import { Image, ImageSourcePropType, Pressable } from "react-native";
 
 import styles from "./screenHeaderButton.style";
 
@@ -15,13 +15,13 @@ const ScreenHeaderBtn = ({
   handlePress,
 }: ScreenHeaderBtnProps) => {
   return (
-    <TouchableOpacity style={styles.btnContainer} onPress={handlePress}>
+    <Pressable style={styles.btnContainer} onPress={handlePress}>
       <Image
         source={iconUrl}
         resizeMode="cover"
         style={styles.btnImg(dimension)}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 
 import { icons } from "@/client/constants";
 
@@ -11,38 +11,32 @@ const Nav = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.navBtn} onPress={() => router.push("/")}>
+      <Pressable style={styles.navBtn} onPress={() => router.push("/")}>
         <Image
           source={icons.home}
           style={styles.navIcon}
           resizeMode="contain"
         />
         <Text>Home</Text>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity
-        style={styles.navBtn}
-        onPress={() => router.push("/saved")}
-      >
+      <Pressable style={styles.navBtn} onPress={() => router.push("/saved/")}>
         <Image
           source={icons.saved}
           style={styles.navIcon}
           resizeMode="contain"
         />
         <Text>Saved</Text>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity
-        style={styles.navBtn}
-        onPress={() => router.push("/profile")}
-      >
+      <Pressable style={styles.navBtn} onPress={() => router.push("/profile/")}>
         <Image
           source={icons.profile}
           style={styles.navIcon}
           resizeMode="contain"
         />
         <Text>Profile</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };
