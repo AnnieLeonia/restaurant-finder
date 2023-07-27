@@ -37,7 +37,7 @@ jobs:
     - id: git_push
       name: Push to Server
       run: |
-        git remote add server git@zolly.eu.org:repos/qa.git
+        git remote add server git@codies.se:repos/qa.git
         git config --global user.email "actions@github.com"
         git config --global user.name "Github Actions"
         git add server dist -f
