@@ -20,7 +20,7 @@ To run the project, follow these steps:
 3. Access the client at http://localhost:8081.
 3. Access the server at http://localhost:3000.
 
-## ☁️ Server
+## ☁ Server
 
 The server handles the back-end functionalities, including the database and REST API routes. The server code is located in the `src/server` directory.
 
