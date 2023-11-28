@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
-import { FlatList } from "react-native";
+import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
 
 import useFetchRestaurant, {
   RestaurantRequestProps,
@@ -9,6 +8,24 @@ import useFetchRestaurant, {
 import { COLORS } from "@/client/constants";
 
 import styles from "./restaurantList.style";
+
+const RestaurantItem = ({ data }: { data: RestaurantResult }) => {
+  return (
+    <View style={{ marginBottom: 20 }}>
+      <Text>{data.name}</Text>
+      <Text>Rating: {data.rating}</Text>
+      <Text>Address: {data.address}</Text>
+      {data.open_now !== undefined && (
+        <Text>Open Now: {data.open_now ? "Yes" : "No"}</Text>
+      )}
+      {/* Render other details as needed */}
+      <Image
+        source={{ uri: data.photos[0] }}
+        style={{ width: 100, height: 100 }}
+      />
+    </View>
+  );
+};
 
 export const generateUniqueKey = () =>
   `_${Math.random().toString(36).substr(2, 9)}`;
@@ -34,10 +51,6 @@ const RestaurantList = ({
     setListItems(data.map(item => ({ ...item, id: generateUniqueKey() })));
   }, [data]);
 
-  console.log("listItems", listItems);
-
-  console.log("data", data);
-
   return (
     <View style={styles.container}>
       <View>
@@ -50,9 +63,7 @@ const RestaurantList = ({
             <FlatList
               data={listItems}
               renderItem={({ item }) => (
-                <Text key={item.id} style={{ fontSize: 50 }}>
-                  {item.name}
-                </Text>
+                <RestaurantItem key={item.id} data={item} />
               )}
               onStartReached={() =>
                 new Promise(resolve => {
@@ -77,7 +88,7 @@ const RestaurantList = ({
               // showDefaultLoadingIndicators={true}
               onStartReachedThreshold={1000}
               onEndReachedThreshold={1000}
-              // showsHorizontalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
         )}
