@@ -59,7 +59,7 @@ router.get("/api/restaurants", async (req, res) => {
       cachedData.results.forEach(restaurant => {
         restaurant.distance = origin.distance(restaurant.location);
       });
-      return res.json(cachedData);
+      return res.json({ cached: true, ...cachedData });
     }
 
     while (true) {
