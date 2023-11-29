@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 
 import useFetchRestaurant, {
@@ -14,27 +14,25 @@ import RestaurantItem, {
 } from "./RestaurantItem";
 import styles from "./restaurantList.style";
 
-const RestaurantList = ({
-  lat,
-  lng,
-  keyword,
-  distance,
-}: RestaurantRequestProps) => {
-  const { data, isLoading, error } = useFetchRestaurant({
-    lat,
-    lng,
-    keyword,
-    distance,
-  });
+const RestaurantList = (props: RestaurantRequestProps) => {
+  const { data, isLoading, error } = useFetchRestaurant(props);
 
+  const restaurants = useMemo(
+    () =>
+      data
+        .filter(restaurant => restaurant.open_now)
+        .filter(restaurant => restaurant.distance.minutes < 30)
+        .filter(restaurant => restaurant.rating > 4),
+    [data],
+  );
   const [listItems, setListItems] = useState<RestaurantResultItem[]>([]);
   const [ref, scrollToRandom] = useScrollToRandom();
 
   useEffect(() => {
-    const looped = Array.from({ length: 10 }, () => data).flat();
+    const looped = Array.from({ length: 10 }, () => restaurants).flat();
     looped.sort(() => Math.random() - 0.5);
     setListItems(looped.map(item => ({ ...item, id: generateUniqueKey() })));
-  }, [data]);
+  }, [restaurants]);
 
   return (
     <View style={styles.container}>
@@ -43,7 +41,7 @@ const RestaurantList = ({
           <ActivityIndicator size="large" color={COLORS.primary} />
         ) : error ? (
           <Text>{error}</Text>
-        ) : data.length > 0 && listItems.length > 0 ? (
+        ) : restaurants.length > 0 && listItems.length > 0 ? (
           <View style={{ width: "100%", height: 1000 }}>
             <FlatList
               ref={ref}
@@ -58,14 +56,14 @@ const RestaurantList = ({
                 <RestaurantItem key={item.id} data={item} />
               )}
               onLayout={async () => {
-                scrollToRandom(data.length);
+                scrollToRandom(restaurants.length);
               }}
               onStartReached={() =>
                 new Promise(resolve => {
                   setListItems(prev =>
-                    data
+                    restaurants
                       .map(item => ({ ...item, id: generateUniqueKey() }))
-                      .concat(prev.slice(0, -data.length)),
+                      .concat(prev.slice(0, -restaurants.length)),
                   );
                   resolve(null);
                 })
@@ -73,8 +71,8 @@ const RestaurantList = ({
               onEndReached={() =>
                 new Promise(resolve => {
                   setListItems(prev =>
-                    prev.slice(data.length).concat(
-                      data.map(item => ({
+                    prev.slice(restaurants.length).concat(
+                      restaurants.map(item => ({
                         ...item,
                         id: generateUniqueKey(),
                       })),

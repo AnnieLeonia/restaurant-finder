@@ -2,11 +2,12 @@ import Geolocation from "./geolocation";
 
 export interface Restaurant {
   name: string;
-  rating: string;
+  rating: number;
+  reviews: number;
   address: string;
+  open_now?: boolean;
   photos: string[];
   types: string[];
-  open_now?: boolean;
   price_level: number;
   location: Geolocation;
   distance: Distance;

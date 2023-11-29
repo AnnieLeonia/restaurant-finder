@@ -13,14 +13,15 @@ export interface RestaurantResponse {
 
 export interface RestaurantResult {
   name: string;
-  rating: string;
+  rating: number;
+  reviews: number;
   address: string;
   open_now?: boolean;
   photos: string[];
-  location: Location;
-  distance: Distance;
   types: string[];
   price_level?: number;
+  location: Location;
+  distance: Distance;
 }
 
 export interface Location {

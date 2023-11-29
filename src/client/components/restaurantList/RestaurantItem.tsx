@@ -10,11 +10,14 @@ export const ITEM_HEIGHT = 200;
 const RestaurantItem = ({ data }: { data: RestaurantResultItem }) => {
   return (
     <View key={data.id} style={{ height: ITEM_HEIGHT }}>
+      <Text>{data.name}</Text>
       <Text>
-        {data.name} - {data.id}
+        Rating: {data.rating} ({data.reviews})
       </Text>
-      <Text>Rating: {data.rating}</Text>
       <Text>Address: {data.address}</Text>
+      <Text>
+        Distance: {data.distance.meters}m ({data.distance.minutes}min)
+      </Text>
       {data.open_now !== undefined && (
         <Text>Open Now: {data.open_now ? "Yes" : "No"}</Text>
       )}
