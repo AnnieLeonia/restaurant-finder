@@ -17,3 +17,6 @@ export function uniqueArray<T>(arr: T[], fn: (item: T) => any) {
     return index === firstIndex;
   });
 }
+
+export const generateUniqueKey = () =>
+  `_${Math.random().toString(36).substring(2)}`;
