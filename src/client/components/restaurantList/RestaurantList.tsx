@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
-import { FlatList } from "react-native-bidirectional-infinite-scroll";
+import { FlatList } from "react-native";
 
 import useFetchRestaurant, {
   RestaurantRequestProps,
@@ -61,7 +61,7 @@ const RestaurantList = ({
                       .map(item => ({ ...item, id: generateUniqueKey() }))
                       .concat(prev),
                   );
-                  resolve();
+                  resolve(null);
                 })
               }
               onEndReached={() =>
@@ -71,10 +71,10 @@ const RestaurantList = ({
                       data.map(item => ({ ...item, id: generateUniqueKey() })),
                     ),
                   );
-                  resolve();
+                  resolve(null);
                 })
               }
-              showDefaultLoadingIndicators={true}
+              // showDefaultLoadingIndicators={true}
               onStartReachedThreshold={1000}
               onEndReachedThreshold={1000}
               // showsHorizontalScrollIndicator={false}
