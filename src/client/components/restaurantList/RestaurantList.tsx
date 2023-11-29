@@ -1,42 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
-import { FlatList } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 
 import useFetchRestaurant, {
   RestaurantRequestProps,
-  RestaurantResult,
 } from "@/client//hook/useFetchRestaurant";
 import { COLORS } from "@/client/constants";
+import useScrollToRandom from "@/client/hook/useScrollToRandom";
+import { generateUniqueKey } from "@/common/utils";
 
+import RestaurantItem, {
+  ITEM_HEIGHT,
+  RestaurantResultItem,
+} from "./RestaurantItem";
 import styles from "./restaurantList.style";
 
-export const generateUniqueKey = () =>
-  `_${Math.random().toString(36).substr(2, 9)}`;
+const RestaurantList = (props: RestaurantRequestProps) => {
+  const { data, isLoading, error } = useFetchRestaurant(props);
 
-const RestaurantList = ({
-  lat,
-  lng,
-  keyword,
-  distance,
-}: RestaurantRequestProps) => {
-  const { data, isLoading, error } = useFetchRestaurant({
-    lat,
-    lng,
-    keyword,
-    distance,
-  });
-
-  const [listItems, setListItems] = useState<
-    (RestaurantResult & { id: string })[]
-  >([]);
+  const restaurants = useMemo(
+    () =>
+      data
+        .filter(restaurant => restaurant.open_now)
+        .filter(restaurant => restaurant.distance.minutes < 30)
+        .filter(restaurant => restaurant.rating > 4),
+    [data],
+  );
+  const [listItems, setListItems] = useState<RestaurantResultItem[]>([]);
+  const [ref, scrollToRandom] = useScrollToRandom();
 
   useEffect(() => {
-    setListItems(data.map(item => ({ ...item, id: generateUniqueKey() })));
-  }, [data]);
-
-  console.log("listItems", listItems);
-
-  console.log("data", data);
+    const looped = Array.from({ length: 10 }, () => restaurants).flat();
+    looped.sort(() => Math.random() - 0.5);
+    setListItems(looped.map(item => ({ ...item, id: generateUniqueKey() })));
+  }, [restaurants]);
 
   return (
     <View style={styles.container}>
@@ -45,21 +41,29 @@ const RestaurantList = ({
           <ActivityIndicator size="large" color={COLORS.primary} />
         ) : error ? (
           <Text>{error}</Text>
-        ) : (
-          <View style={{ width: 500, height: 500 }}>
+        ) : restaurants.length > 0 && listItems.length > 0 ? (
+          <View style={{ width: "100%", height: 1000 }}>
             <FlatList
+              ref={ref}
+              keyExtractor={item => item.id}
+              getItemLayout={(_data, index) => ({
+                length: ITEM_HEIGHT,
+                offset: ITEM_HEIGHT * index,
+                index,
+              })}
               data={listItems}
               renderItem={({ item }) => (
-                <Text key={item.id} style={{ fontSize: 50 }}>
-                  {item.name}
-                </Text>
+                <RestaurantItem key={item.id} data={item} />
               )}
+              onLayout={async () => {
+                scrollToRandom(restaurants.length);
+              }}
               onStartReached={() =>
                 new Promise(resolve => {
                   setListItems(prev =>
-                    data
+                    restaurants
                       .map(item => ({ ...item, id: generateUniqueKey() }))
-                      .concat(prev),
+                      .concat(prev.slice(0, -restaurants.length)),
                   );
                   resolve(null);
                 })
@@ -67,20 +71,25 @@ const RestaurantList = ({
               onEndReached={() =>
                 new Promise(resolve => {
                   setListItems(prev =>
-                    prev.concat(
-                      data.map(item => ({ ...item, id: generateUniqueKey() })),
+                    prev.slice(restaurants.length).concat(
+                      restaurants.map(item => ({
+                        ...item,
+                        id: generateUniqueKey(),
+                      })),
                     ),
                   );
                   resolve(null);
                 })
               }
-              // showDefaultLoadingIndicators={true}
-              onStartReachedThreshold={1000}
-              onEndReachedThreshold={1000}
-              // showsHorizontalScrollIndicator={false}
+              onScrollToIndexFailed={info => {
+                console.error(info);
+              }}
+              onStartReachedThreshold={100}
+              onEndReachedThreshold={100}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
-        )}
+        ) : null}
       </View>
     </View>
   );

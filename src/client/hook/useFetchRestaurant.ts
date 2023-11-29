@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import axios from "axios";
 
+import { baseUrl } from "../constants";
+
 export interface RestaurantResponse {
   results: RestaurantResult[];
   total: number;
@@ -11,14 +13,15 @@ export interface RestaurantResponse {
 
 export interface RestaurantResult {
   name: string;
-  rating: string;
+  rating: number;
+  reviews: number;
   address: string;
   open_now?: boolean;
   photos: string[];
-  location: Location;
-  distance: Distance;
   types: string[];
   price_level?: number;
+  location: Location;
+  distance: Distance;
 }
 
 export interface Location {
@@ -58,7 +61,7 @@ const useFetchRestaurant = ({
   const options = useMemo(
     () => ({
       method: "GET",
-      url: `https://eat.codies.se/api/restaurants?latitude=${lat}&longitude=${lng}
+      url: `${baseUrl}/api/restaurants?latitude=${lat}&longitude=${lng}
       ${keyword ? `&keyword=${keyword}` : ""}
       ${distance ? `&radius=${distance}` : "&radius=30000"}`,
       headers: {

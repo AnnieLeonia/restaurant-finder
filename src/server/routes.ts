@@ -96,8 +96,8 @@ router.get("/api/restaurants", async (req, res) => {
           )
           .map(establishment => ({
             name: establishment.name,
-            rating:
-              establishment.rating + ` (${establishment.user_ratings_total})`,
+            rating: establishment.rating,
+            reviews: establishment.user_ratings_total,
             address: establishment.vicinity,
             open_now: establishment.opening_hours?.open_now,
             price_level: establishment.price_level,

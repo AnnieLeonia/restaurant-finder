@@ -58,7 +58,7 @@ const Search = () => {
         <Pressable onPress={() => router.back()}>
           <Image source={icons.chevronLeft} style={styles.backIcon} />
         </Pressable>
-        <Text style={styles.headerText}>{params.id}</Text>
+        <Text style={styles.headerText}>{params.id || "Anything"}</Text>
         <View>
           {isLoadingCoords ? (
             <ActivityIndicator size="large" color={COLORS.primary} />
