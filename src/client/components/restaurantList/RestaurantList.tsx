@@ -1,12 +1,17 @@
-import React from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
+import { FlatList } from "react-native";
 
 import useFetchRestaurant, {
   RestaurantRequestProps,
+  RestaurantResult,
 } from "@/client//hook/useFetchRestaurant";
 import { COLORS } from "@/client/constants";
 
 import styles from "./restaurantList.style";
+
+export const generateUniqueKey = () =>
+  `_${Math.random().toString(36).substr(2, 9)}`;
 
 const RestaurantList = ({
   lat,
@@ -21,6 +26,18 @@ const RestaurantList = ({
     distance,
   });
 
+  const [listItems, setListItems] = useState<
+    (RestaurantResult & { id: string })[]
+  >([]);
+
+  useEffect(() => {
+    setListItems(data.map(item => ({ ...item, id: generateUniqueKey() })));
+  }, [data]);
+
+  console.log("listItems", listItems);
+
+  console.log("data", data);
+
   return (
     <View style={styles.container}>
       <View>
@@ -29,11 +46,40 @@ const RestaurantList = ({
         ) : error ? (
           <Text>{error}</Text>
         ) : (
-          <ScrollView>
-            {data?.map((item, index) => (
-              <Text key={index}>{item.name}</Text>
-            ))}
-          </ScrollView>
+          <View style={{ width: 500, height: 500 }}>
+            <FlatList
+              data={listItems}
+              renderItem={({ item }) => (
+                <Text key={item.id} style={{ fontSize: 50 }}>
+                  {item.name}
+                </Text>
+              )}
+              onStartReached={() =>
+                new Promise(resolve => {
+                  setListItems(prev =>
+                    data
+                      .map(item => ({ ...item, id: generateUniqueKey() }))
+                      .concat(prev),
+                  );
+                  resolve(null);
+                })
+              }
+              onEndReached={() =>
+                new Promise(resolve => {
+                  setListItems(prev =>
+                    prev.concat(
+                      data.map(item => ({ ...item, id: generateUniqueKey() })),
+                    ),
+                  );
+                  resolve(null);
+                })
+              }
+              // showDefaultLoadingIndicators={true}
+              onStartReachedThreshold={1000}
+              onEndReachedThreshold={1000}
+              // showsHorizontalScrollIndicator={false}
+            />
+          </View>
         )}
       </View>
     </View>
