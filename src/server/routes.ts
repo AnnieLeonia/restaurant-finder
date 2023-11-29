@@ -25,6 +25,7 @@ const photoApiUrl = "https://maps.googleapis.com/maps/api/place/photo";
 const router = express.Router();
 
 const cache = new NodeCache({ stdTTL: 60 * 60 * 24 * 30 }); // 30 days
+const photoUrls = new NodeCache({ stdTTL: 60 * 60 * 24 * 30 }); // 30 days
 
 router.get("/api/hello", (req, res) => {
   res.json("Good day to you, sir!");
@@ -149,15 +150,23 @@ router.get("/api/photo/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
+    const cachedUrl = photoUrls.get<string>(id);
     const params = new URLSearchParams({
       photoreference: id,
       maxheight: "400",
       key: apiKey,
     });
+    const url = cachedUrl || `${photoApiUrl}?${params.toString()}`;
+    const image = await fetch(url);
+    photoUrls.set(id, url);
 
-    return res.redirect(`${photoApiUrl}?${params.toString()}`);
+    const buffer = await image.arrayBuffer();
+    const blob = await Buffer.from(buffer);
+
+    return res.send(blob);
   } catch (error: any) {
     console.error("Error fetching data:", error);
+    photoUrls.del(req.params.id);
     return res.status(500).json({ message: error.message });
   }
 });
