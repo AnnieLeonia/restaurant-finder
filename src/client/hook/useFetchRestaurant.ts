@@ -1,45 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { Restaurant, RestaurantsResponse } from "@/common/types";
 import axios from "axios";
 
 import { baseUrl } from "../constants";
-
-export interface RestaurantResponse {
-  results: RestaurantResult[];
-  total: number;
-  status: string;
-  statuses: Status[];
-}
-
-export interface RestaurantResult {
-  name: string;
-  rating: number;
-  reviews: number;
-  address: string;
-  open_now?: boolean;
-  photos: string[];
-  types: string[];
-  price_level?: number;
-  location: Location;
-  distance: Distance;
-}
-
-export interface Location {
-  lat: number;
-  lng: number;
-}
-
-export interface Distance {
-  meters: number;
-  minutes: number;
-}
-
-export interface Status {
-  results: number;
-  next_page_token: boolean;
-  html_attributions: any[];
-  status: string;
-}
 
 export interface RestaurantRequestProps {
   lat: number;
@@ -54,7 +18,7 @@ const useFetchRestaurant = ({
   keyword,
   distance,
 }: RestaurantRequestProps) => {
-  const [data, setData] = useState<RestaurantResult[]>([]);
+  const [data, setData] = useState<Restaurant[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -74,7 +38,7 @@ const useFetchRestaurant = ({
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.request<RestaurantResponse>(options);
+      const response = await axios.request<RestaurantsResponse>(options);
 
       setData(response.data.results);
       setIsLoading(false);

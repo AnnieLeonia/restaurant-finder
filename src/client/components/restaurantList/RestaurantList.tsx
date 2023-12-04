@@ -10,7 +10,7 @@ import { generateUniqueKey } from "@/common/utils";
 
 import RestaurantItem, {
   ITEM_HEIGHT,
-  RestaurantResultItem,
+  RestaurantItemType,
 } from "./RestaurantItem";
 import styles from "./restaurantList.style";
 
@@ -25,7 +25,7 @@ const RestaurantList = (props: RestaurantRequestProps) => {
         .filter(restaurant => restaurant.rating > 4),
     [data],
   );
-  const [listItems, setListItems] = useState<RestaurantResultItem[]>([]);
+  const [listItems, setListItems] = useState<RestaurantItemType[]>([]);
   const [ref, scrollToRandom] = useScrollToRandom();
 
   useEffect(() => {
