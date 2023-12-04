@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { RestaurantsResponse } from "@/common/types";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import { baseUrl } from "../constants";
 
@@ -24,7 +24,7 @@ const useFetchRestaurant = ({
     status: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<AxiosError | null>(null);
 
   const options = useMemo(
     () => ({
