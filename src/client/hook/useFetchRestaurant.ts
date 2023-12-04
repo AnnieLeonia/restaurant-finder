@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Restaurant, RestaurantsResponse } from "@/common/types";
+import { RestaurantsResponse } from "@/common/types";
 import axios from "axios";
 
 import { baseUrl } from "../constants";
@@ -18,7 +18,11 @@ const useFetchRestaurant = ({
   keyword,
   distance,
 }: RestaurantRequestProps) => {
-  const [data, setData] = useState<Restaurant[]>([]);
+  const [data, setData] = useState<RestaurantsResponse>({
+    results: [],
+    total: 0,
+    status: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -39,11 +43,10 @@ const useFetchRestaurant = ({
     setIsLoading(true);
     try {
       const response = await axios.request<RestaurantsResponse>(options);
-
-      setData(response.data.results);
+      setData(response.data);
       setIsLoading(false);
-    } catch (error: any) {
-      setError(error);
+    } catch (err: any) {
+      setError(err);
     } finally {
       setIsLoading(false);
     }

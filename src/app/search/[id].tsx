@@ -59,17 +59,18 @@ const Search = () => {
           <Image source={icons.chevronLeft} style={styles.backIcon} />
         </Pressable>
         <Text style={styles.headerText}>{params.id || "Anything"}</Text>
-        <View>
+        <View style={styles.view}>
           {isLoadingCoords ? (
-            <ActivityIndicator size="large" color={COLORS.primary} />
+            <>
+              <ActivityIndicator size="large" color={COLORS.primary} />
+              <Text>Getting your location...</Text>
+            </>
           ) : location ? (
-            <View>
-              <RestaurantList
-                lat={location.lat}
-                lng={location.lng}
-                keyword={params.id as string}
-              />
-            </View>
+            <RestaurantList
+              lat={location.lat}
+              lng={location.lng}
+              keyword={`${params.id}`}
+            />
           ) : (
             <Text>{errorMsg}</Text>
           )}

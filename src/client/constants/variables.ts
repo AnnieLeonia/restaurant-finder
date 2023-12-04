@@ -1,1 +1,3 @@
-export const baseUrl = process.env.BASE_URL || "https://eat.codies.se";
+const { EXPO_PUBLIC_BASE_URL } = process.env;
+
+export const baseUrl = EXPO_PUBLIC_BASE_URL || "https://eat.codies.se";
