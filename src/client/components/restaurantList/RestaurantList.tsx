@@ -28,9 +28,9 @@ const RestaurantList = (props: RestaurantRequestProps) => {
   const [ref, scrollToRandom] = useScrollToRandom();
 
   useEffect(() => {
-    const looped = Array.from({ length: 10 }, () => restaurants).flat();
-    const shuffled = shuffle(looped);
-    setListItems(shuffled.map(item => ({ ...item, id: generateUniqueKey() })));
+    const shuffled = shuffle(restaurants);
+    const looped = Array.from({ length: 10 }, () => shuffled).flat();
+    setListItems(looped.map(item => ({ ...item, id: generateUniqueKey() })));
   }, [restaurants]);
 
   return (
@@ -41,7 +41,7 @@ const RestaurantList = (props: RestaurantRequestProps) => {
           <Text>Finding restaurants...</Text>
         </>
       ) : error ? (
-        <Text>{error}</Text>
+        <Text>Error: {error.message}</Text>
       ) : restaurants.length > 0 && listItems.length > 0 ? (
         <>
           <FlatList
@@ -59,34 +59,34 @@ const RestaurantList = (props: RestaurantRequestProps) => {
             onLayout={async () => {
               scrollToRandom(restaurants.length);
             }}
-            onStartReached={() =>
-              new Promise(resolve => {
+            onStartReached={() => {
+              return new Promise(resolve => {
                 setListItems(prev =>
-                  listItems
+                  shuffle(restaurants)
                     .map(item => ({ ...item, id: generateUniqueKey() }))
-                    .concat(prev.slice(0, -listItems.length)),
+                    .concat(prev.slice(0, -restaurants.length)),
                 );
                 resolve(null);
-              })
-            }
-            onEndReached={() =>
-              new Promise(resolve => {
+              });
+            }}
+            onEndReached={() => {
+              return new Promise(resolve => {
                 setListItems(prev =>
-                  prev.slice(listItems.length).concat(
-                    listItems.map(item => ({
+                  prev.slice(restaurants.length).concat(
+                    shuffle(restaurants).map(item => ({
                       ...item,
                       id: generateUniqueKey(),
                     })),
                   ),
                 );
                 resolve(null);
-              })
-            }
+              });
+            }}
             onScrollToIndexFailed={info => {
               console.error(info);
             }}
-            onStartReachedThreshold={100}
-            onEndReachedThreshold={100}
+            onStartReachedThreshold={1}
+            onEndReachedThreshold={1}
             showsHorizontalScrollIndicator={false}
           />
           <Text style={styles.cachedText}>
