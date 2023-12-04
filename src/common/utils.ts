@@ -18,5 +18,26 @@ export function uniqueArray<T>(arr: T[], fn: (item: T) => any) {
   });
 }
 
+export function shuffle<T>(_array: T[]) {
+  const array = JSON.parse(JSON.stringify(_array)) as T[];
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
+
 export const generateUniqueKey = () =>
   `_${Math.random().toString(36).substring(2)}`;

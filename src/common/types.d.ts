@@ -1,4 +1,5 @@
 export interface Restaurant {
+  place_id: string;
   name: string;
   rating: number;
   reviews: number;
@@ -25,7 +26,8 @@ export interface RestaurantsResponse {
   results: Restaurant[];
   total: number;
   status: string;
-  statuses: Status[];
+  statuses?: Status[];
+  cached?: boolean;
 }
 
 export interface Status {

@@ -43,10 +43,7 @@ router.get("/api/restaurants", async (req, res) => {
     }
 
     const origin = new Geolocation({ lat: +latitude, lng: +longitude });
-    const locations: Geolocation[] = [];
-    if (process.env.NODE_ENV !== "development") {
-      locations.push(...origin.nearbyGeolocations(+radius));
-    }
+    const locations: Geolocation[] = origin.nearbyGeolocations(+radius);
 
     const restaurants: Restaurant[] = [];
     let status = "OK";
@@ -77,6 +74,7 @@ router.get("/api/restaurants", async (req, res) => {
       const searchApiUrl = `${placeSearchUrl}?${params.toString()}`;
       const response = await fetch(searchApiUrl);
       const data: PlaceSearchResponse = await response.json();
+
       const { results, next_page_token, ...rest } = data;
 
       if (data.status !== "OK") {
@@ -96,6 +94,7 @@ router.get("/api/restaurants", async (req, res) => {
             establishment => establishment.business_status === "OPERATIONAL",
           )
           .map(establishment => ({
+            place_id: establishment.place_id,
             name: establishment.name,
             rating: establishment.rating,
             reviews: establishment.user_ratings_total,
@@ -111,6 +110,10 @@ router.get("/api/restaurants", async (req, res) => {
           })),
       );
 
+      if (process.env.NODE_ENV !== "production") {
+        break;
+      }
+
       if (!next_page_token && !locations.length) {
         break;
       }
@@ -125,8 +128,9 @@ router.get("/api/restaurants", async (req, res) => {
       }
     }
 
-    const uniqueRestaurants = uniqueArray(restaurants, r =>
-      r.location.toString(),
+    const uniqueRestaurants = uniqueArray(
+      restaurants,
+      r => `${r.location.lat},${r.location.lng}`,
     );
     const sortedRestaurants = uniqueRestaurants.sort((a, b) =>
       a.name.localeCompare(b.name),
