@@ -1,13 +1,13 @@
 import React from "react";
 import { Image, Text, View } from "react-native";
 
-import { RestaurantResult } from "@/client//hook/useFetchRestaurant";
 import { baseUrl } from "@/client/constants";
+import { Restaurant } from "@/common/types";
 
-export type RestaurantResultItem = RestaurantResult & { id: string };
+export type RestaurantItemType = Restaurant & { id: string };
 export const ITEM_HEIGHT = 200;
 
-const RestaurantItem = ({ data }: { data: RestaurantResultItem }) => {
+const RestaurantItem = ({ data }: { data: RestaurantItemType }) => {
   return (
     <View key={data.id} style={{ height: ITEM_HEIGHT }}>
       <Text>{data.name}</Text>

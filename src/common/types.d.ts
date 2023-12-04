@@ -1,5 +1,3 @@
-import Geolocation from "./geolocation";
-
 export interface Restaurant {
   name: string;
   rating: number;
@@ -9,20 +7,32 @@ export interface Restaurant {
   photos: string[];
   types: string[];
   price_level: number;
-  location: Geolocation;
+  location: Location;
   distance: Distance;
+}
+
+export interface Location {
+  lat: number;
+  lng: number;
+}
+
+export interface Distance {
+  meters: number;
+  minutes: number;
 }
 
 export interface RestaurantsResponse {
   results: Restaurant[];
   total: number;
   status: string;
-  statuses: { [key: string]: any };
+  statuses: Status[];
 }
 
-export interface Distance {
-  meters: number;
-  minutes: number;
+export interface Status {
+  status: string;
+  results: number;
+  next_page_token: boolean;
+  [key: string]: any;
 }
 
 export interface PlaceSearchResponse {
@@ -55,11 +65,6 @@ export interface Establishment {
 export interface Geometry {
   location: Location;
   viewport: Viewport;
-}
-
-export interface Location {
-  lat: number;
-  lng: number;
 }
 
 export interface Viewport {

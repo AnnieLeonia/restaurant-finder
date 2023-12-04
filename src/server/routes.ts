@@ -7,6 +7,7 @@ import {
   PlaceSearchResponse,
   Restaurant,
   RestaurantsResponse,
+  Status,
 } from "../common/types";
 import { uniqueArray } from "../common/utils";
 import { getStringQueryParam } from "./utils";
@@ -49,7 +50,7 @@ router.get("/api/restaurants", async (req, res) => {
 
     const restaurants: Restaurant[] = [];
     let status = "OK";
-    const statuses: { [key: string]: any } = [];
+    const statuses: Status[] = [];
     let location = origin;
     let pagetoken = "";
 
@@ -104,7 +105,7 @@ router.get("/api/restaurants", async (req, res) => {
             photos: (establishment.photos || []).map(
               photo => `/api/photo/${photo.photo_reference}`,
             ),
-            location: new Geolocation(establishment.geometry.location),
+            location: establishment.geometry.location,
             distance: origin.distance(establishment.geometry.location),
             types: establishment.types,
           })),
