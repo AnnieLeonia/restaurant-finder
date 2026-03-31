@@ -10,7 +10,15 @@ export const ITEM_HEIGHT = 200;
 const mapsUrl = (data: Restaurant) =>
   `https://www.google.com/maps/search/?api=1&query=${data.name} ${data.address}&query_place_id=${data.place_id}`;
 
+function openStatusLabel(openNow?: boolean): string {
+  if (openNow === true) return "Öppen nu";
+  if (openNow === false) return "Stängt";
+  return "Öppettider okända";
+}
+
 const RestaurantItem = ({ data }: { data: RestaurantItemType }) => {
+  const firstPhoto = data.photos?.[0];
+
   return (
     <Pressable
       key={data.id}
@@ -21,21 +29,21 @@ const RestaurantItem = ({ data }: { data: RestaurantItemType }) => {
       <Text>
         Rating: {data.rating} ({data.reviews})
       </Text>
+      <Text>{openStatusLabel(data.open_now)}</Text>
       <Text>Address: {data.address}</Text>
       <Text>
         Distance: {data.distance.meters}m ({data.distance.minutes}min)
       </Text>
-      {/* Render other details as needed */}
-      {data.photos[0] && (
+      {firstPhoto ? (
         <Image
           key={data.id}
           id={data.id}
           alt={data.id}
-          source={{ uri: baseUrl + data.photos[0] }}
+          source={{ uri: baseUrl + firstPhoto }}
           style={{ width: 100, height: 100 }}
           resizeMode="cover"
         />
-      )}
+      ) : null}
     </Pressable>
   );
 };

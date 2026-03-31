@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 
+import { COLORS } from "@/client/constants";
 import useFetchRestaurant, {
   RestaurantRequestProps,
-} from "@/client//hook/useFetchRestaurant";
-import { COLORS } from "@/client/constants";
+} from "@/client/hook/useFetchRestaurant";
 import useScrollToRandom from "@/client/hook/useScrollToRandom";
+import { SearchFilterState } from "@/common/searchFilters";
+import { Restaurant, RestaurantsResponse } from "@/common/types";
 import { generateUniqueKey, shuffle } from "@/common/utils";
 
 import RestaurantItem, {
@@ -14,18 +16,43 @@ import RestaurantItem, {
 } from "./RestaurantItem";
 import styles from "./restaurantList.style";
 
-const RestaurantList = (props: RestaurantRequestProps) => {
-  const { data, isLoading, error } = useFetchRestaurant(props);
+export interface RestaurantListProps extends RestaurantRequestProps {
+  filters: SearchFilterState;
+  onPersist?: (payload: {
+    response: RestaurantsResponse;
+    filtered: Restaurant[];
+  }) => void;
+}
+
+function applyFilters(
+  results: Restaurant[],
+  filters: SearchFilterState,
+): Restaurant[] {
+  return results
+    .filter(r => r.rating >= filters.minRating)
+    .filter(r => r.reviews >= filters.minReviews)
+    .filter(r => {
+      if (!filters.openNowOnly) return true;
+      return r.open_now === true;
+    });
+}
+
+const RestaurantList = (props: RestaurantListProps) => {
+  const { filters, onPersist, ...requestProps } = props;
+  const { data, isLoading, error } = useFetchRestaurant(requestProps);
 
   const restaurants = useMemo(
-    () =>
-      data.results
-        .filter(restaurant => restaurant.distance.minutes < 20)
-        .filter(restaurant => restaurant.rating > 3.8),
-    [data.results],
+    () => applyFilters(data.results, filters),
+    [data.results, filters],
   );
+
   const [listItems, setListItems] = useState<RestaurantItemType[]>([]);
   const [ref, scrollToRandom] = useScrollToRandom();
+
+  useEffect(() => {
+    if (isLoading || error) return;
+    onPersist?.({ response: data, filtered: restaurants });
+  }, [data, isLoading, error, filters, restaurants, onPersist]);
 
   useEffect(() => {
     const shuffled = shuffle(restaurants);
@@ -93,7 +120,9 @@ const RestaurantList = (props: RestaurantRequestProps) => {
             {data.cached ? "Cached data" : "Live data"}
           </Text>
         </>
-      ) : null}
+      ) : (
+        <Text>Inga restauranger matchar dina filter.</Text>
+      )}
     </View>
   );
 };

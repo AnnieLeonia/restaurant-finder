@@ -9,8 +9,15 @@ export interface RestaurantRequestProps {
   lat: number;
   lng: number;
   keyword?: string;
-  distance?: number;
+  /** Search radius in meters (Google Places max 50_000). */
+  distance: number;
 }
+
+const emptyResponse = (): RestaurantsResponse => ({
+  results: [],
+  total: 0,
+  status: "",
+});
 
 const useFetchRestaurant = ({
   lat,
@@ -18,35 +25,36 @@ const useFetchRestaurant = ({
   keyword,
   distance,
 }: RestaurantRequestProps) => {
-  const [data, setData] = useState<RestaurantsResponse>({
-    results: [],
-    total: 0,
-    status: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<RestaurantsResponse>(emptyResponse());
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<AxiosError | null>(null);
 
-  const options = useMemo(
-    () => ({
-      method: "GET",
-      url: `${baseUrl}/api/restaurants?latitude=${lat}&longitude=${lng}
-      ${keyword ? `&keyword=${keyword}` : ""}
-      ${distance ? `&radius=${distance}` : "&radius=30000"}`,
+  const options = useMemo(() => {
+    const params = new URLSearchParams({
+      latitude: String(lat),
+      longitude: String(lng),
+      radius: String(distance),
+    });
+    if (keyword) {
+      params.set("keyword", keyword);
+    }
+    return {
+      method: "GET" as const,
+      url: `${baseUrl}/api/restaurants?${params.toString()}`,
       headers: {
         accept: "application/json",
       },
-    }),
-    [lat, lng, keyword, distance],
-  );
+    };
+  }, [lat, lng, keyword, distance]);
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const response = await axios.request<RestaurantsResponse>(options);
       setData(response.data);
-      setIsLoading(false);
-    } catch (err: any) {
-      setError(err);
+    } catch (err: unknown) {
+      setError(err as AxiosError);
     } finally {
       setIsLoading(false);
     }
