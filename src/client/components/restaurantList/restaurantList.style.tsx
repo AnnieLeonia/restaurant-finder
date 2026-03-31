@@ -32,6 +32,28 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: COLORS.secondary,
   },
+  heroWrap: {
+    position: "relative",
+    width: "100%",
+  },
+  favoritePressable: {
+    position: "absolute",
+    top: SIZES.medium,
+    right: SIZES.medium,
+    zIndex: 10,
+    borderRadius: 22,
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
+    padding: SIZES.xSmall,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.12,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  favoriteIcon: {
+    width: 28,
+    height: 28,
+  },
   heroImage: {
     width: "100%",
     backgroundColor: COLORS.primary,

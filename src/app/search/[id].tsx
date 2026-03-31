@@ -44,6 +44,7 @@ const Search = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [filters, setFilters] = useState<SearchFilterState>(DEFAULT_FILTERS);
   const [filtersDrawerOpen, setFiltersDrawerOpen] = useState(false);
+  const [randomizeTick, setRandomizeTick] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -110,23 +111,40 @@ const Search = () => {
 
       <View style={styles.view}>
         <View style={styles.toolbarRow}>
-          <Pressable
-            onPress={() => router.back()}
-            accessibilityRole="button"
-            accessibilityLabel="Tillbaka"
-          >
-            <Image source={icons.chevronLeft} style={styles.backIcon} />
-          </Pressable>
-          <Pressable
-            onPress={() => setFiltersDrawerOpen(true)}
-            style={styles.filterButton}
-            accessibilityRole="button"
-            accessibilityLabel="Filter"
-          >
-            <Image source={icons.filter} style={styles.filterIcon} />
-          </Pressable>
+          <View style={styles.toolbarSlotStart}>
+            <Pressable
+              onPress={() => router.back()}
+              style={styles.toolbarIconHit}
+              accessibilityRole="button"
+              accessibilityLabel="Tillbaka"
+            >
+              <Image source={icons.chevronLeft} style={styles.backIcon} />
+            </Pressable>
+          </View>
+          <View style={styles.toolbarCenter}>
+            <Pressable
+              onPress={() => setRandomizeTick(n => n + 1)}
+              style={styles.shuffleButton}
+              accessibilityRole="button"
+              accessibilityLabel="Slumpa om listan"
+            >
+              <Text style={styles.shuffleButtonText}>Slumpa</Text>
+              <Text style={styles.searchKeywordText}>
+                {keyword || "Vad som"}
+              </Text>
+            </Pressable>
+          </View>
+          <View style={styles.toolbarSlotEnd}>
+            <Pressable
+              onPress={() => setFiltersDrawerOpen(true)}
+              style={styles.toolbarIconHit}
+              accessibilityRole="button"
+              accessibilityLabel="Filter"
+            >
+              <Image source={icons.filter} style={styles.filterIcon} />
+            </Pressable>
+          </View>
         </View>
-        <Text style={styles.headerText}>{keyword || "Anything"}</Text>
 
         <SearchFiltersDrawer
           visible={filtersDrawerOpen}
@@ -151,6 +169,7 @@ const Search = () => {
               keyword={keyword}
               distance={filters.radiusMeters}
               filters={filters}
+              randomizeTrigger={randomizeTick}
               onPersist={onPersist}
             />
           ) : (

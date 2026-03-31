@@ -1,4 +1,4 @@
-import { RefObject, useRef } from "react";
+import { RefObject, useCallback, useRef } from "react";
 import { FlatList } from "react-native";
 
 type ReturnType = [RefObject<FlatList>, (length: number) => void];
@@ -6,7 +6,7 @@ type ReturnType = [RefObject<FlatList>, (length: number) => void];
 function useScrollToRandom(): ReturnType {
   const flatList = useRef<FlatList>(null);
 
-  async function scrollToRandom(length: number) {
+  const scrollToRandom = useCallback(async (length: number) => {
     const offset = length;
     let index = offset + Math.floor(Math.random() * length);
     const finalIndex = index + Math.floor(Math.random() * 5) + 3;
@@ -20,7 +20,7 @@ function useScrollToRandom(): ReturnType {
         clearInterval(intervalID);
       }
     }, 500);
-  }
+  }, []);
 
   return [flatList, scrollToRandom];
 }

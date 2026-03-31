@@ -8,19 +8,22 @@ import {
 } from "react-native";
 
 import { COLORS } from "@/client/constants";
+import { useFavorites } from "@/client/context/FavoritesContext";
 import useFetchRestaurant, {
   RestaurantRequestProps,
 } from "@/client/hook/useFetchRestaurant";
 import useScrollToRandom from "@/client/hook/useScrollToRandom";
 import { SearchFilterState, effectiveMinReviews } from "@/common/searchFilters";
 import { Restaurant, RestaurantsResponse } from "@/common/types";
-import { generateUniqueKey, shuffle } from "@/common/utils";
+import { generateUniqueKey, omitListItemId, shuffle } from "@/common/utils";
 
 import RestaurantItem, { RestaurantItemType } from "./RestaurantItem";
 import styles from "./restaurantList.style";
 
 export interface RestaurantListProps extends RestaurantRequestProps {
   filters: SearchFilterState;
+  /** Increment (e.g. from a "randomize again" button) to reshuffle the list and scroll like on first load. */
+  randomizeTrigger?: number;
   onPersist?: (payload: {
     response: RestaurantsResponse;
     filtered: Restaurant[];
@@ -44,8 +47,9 @@ function applyFilters(
 }
 
 const RestaurantList = (props: RestaurantListProps) => {
-  const { filters, onPersist, ...requestProps } = props;
+  const { filters, onPersist, randomizeTrigger = 0, ...requestProps } = props;
   const { data, isLoading, error } = useFetchRestaurant(requestProps);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const restaurants = useMemo(
     () => applyFilters(data.results, filters),
@@ -67,10 +71,23 @@ const RestaurantList = (props: RestaurantListProps) => {
   }, [data, isLoading, error, filters, restaurants, onPersist]);
 
   useEffect(() => {
+    if (restaurants.length === 0) {
+      setListItems([]);
+      return;
+    }
     const shuffled = shuffle(restaurants);
     const looped = Array.from({ length: 10 }, () => shuffled).flat();
     setListItems(looped.map(item => ({ ...item, id: generateUniqueKey() })));
-  }, [restaurants]);
+  }, [restaurants, randomizeTrigger]);
+
+  useEffect(() => {
+    if (randomizeTrigger === 0) return;
+    if (listHeight === 0 || restaurants.length === 0) return;
+    const t = setTimeout(() => {
+      scrollToRandom(restaurants.length);
+    }, 150);
+    return () => clearTimeout(t);
+  }, [randomizeTrigger, listHeight, restaurants.length, scrollToRandom]);
 
   return (
     <View style={styles.container}>
@@ -101,7 +118,14 @@ const RestaurantList = (props: RestaurantListProps) => {
                 data={listItems}
                 extraData={listHeight}
                 renderItem={({ item }) => (
-                  <RestaurantItem data={item} itemHeight={listHeight} />
+                  <RestaurantItem
+                    data={item}
+                    itemHeight={listHeight}
+                    isFavorite={isFavorite(item.place_id)}
+                    onToggleFavorite={() =>
+                      toggleFavorite(omitListItemId(item) as Restaurant)
+                    }
+                  />
                 )}
                 onLayout={async () => {
                   scrollToRandom(restaurants.length);

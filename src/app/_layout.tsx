@@ -4,6 +4,8 @@ import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { FavoritesProvider } from "@/client/context/FavoritesContext";
+
 SplashScreen.preventAutoHideAsync();
 
 const Layout = () => {
@@ -25,7 +27,9 @@ const Layout = () => {
 
   return (
     <SafeAreaProvider>
-      <Stack />
+      <FavoritesProvider>
+        <Stack />
+      </FavoritesProvider>
     </SafeAreaProvider>
   );
 };

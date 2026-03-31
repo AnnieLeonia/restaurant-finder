@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { COLORS } from "../constants/theme";
+import { COLORS, FONT } from "../constants/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -13,22 +13,63 @@ const styles = StyleSheet.create({
   toolbarRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     paddingHorizontal: 4,
+    paddingBottom: 8,
+    marginBottom: 4,
+    minHeight: 50,
   },
-  filterButton: {
-    padding: 0,
+  /** Same width so the middle “Slumpa” stays visually centered. */
+  toolbarSlotStart: {
+    width: 56,
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
+  toolbarSlotEnd: {
+    width: 56,
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+  toolbarCenter: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 4,
+  },
+  toolbarIconHit: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  shuffleButton: {
+    paddingTop: 4,
+    paddingBottom: 0,
+    paddingHorizontal: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  shuffleButtonText: {
+    fontFamily: FONT.medium,
+    fontSize: 13,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    color: COLORS.tertiary,
+  },
+  searchKeywordText: {
+    fontFamily: FONT.bold,
+    fontSize: 20,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    color: COLORS.black,
+    textAlign: "center",
+    marginTop: 2,
+    marginBottom: 0,
+    paddingHorizontal: 4,
+    maxWidth: "100%",
   },
   filterIcon: {
     width: 50,
     height: 50,
-  },
-  headerText: {
-    textTransform: "uppercase",
-    fontSize: 20,
-    marginTop: 4,
-    marginBottom: 8,
-    paddingHorizontal: 4,
   },
   backIcon: {
     width: 50,

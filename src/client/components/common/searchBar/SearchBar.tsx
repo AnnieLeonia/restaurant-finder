@@ -19,7 +19,7 @@ const SearchBar = () => {
             value={searchTerm}
             onChangeText={text => setSearchTerm(text)}
             onSubmitEditing={() => router.push(`/search/${searchTerm}`)}
-            placeholder="What are you looking for?"
+            placeholder="Vad letar du efter?"
           />
           <Pressable
             style={styles.searchBtn}

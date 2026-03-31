@@ -1,5 +1,4 @@
-import Slider from "@react-native-community/slider";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, Switch, Text, View } from "react-native";
 
 import { COLORS } from "@/client/constants";
@@ -10,6 +9,7 @@ import {
   SearchFilterState,
 } from "@/common/searchFilters";
 
+import RadiusSlider from "./RadiusSlider";
 import styles from "./searchFilters.style";
 
 export interface SearchFiltersProps {
@@ -25,23 +25,47 @@ function formatRadiusMeters(m: number): string {
   return `${m} m`;
 }
 
-const SearchFilters = ({ filters, onChange }: SearchFiltersProps) => {
-  const setRating = (minRating: number) => onChange({ ...filters, minRating });
+const roundRadiusMeters = (value: number) => {
+  const rounded = Math.round(value / 100) * 100;
+  return Math.min(MAX_RADIUS_METERS_USER, Math.max(MIN_RADIUS_METERS, rounded));
+};
 
-  const setRadiusFromSlider = (value: number) => {
-    const rounded = Math.round(value / 100) * 100;
-    const radiusMeters = Math.min(
-      MAX_RADIUS_METERS_USER,
-      Math.max(MIN_RADIUS_METERS, rounded),
-    );
-    onChange({ ...filters, radiusMeters });
+const SearchFilters = ({ filters, onChange }: SearchFiltersProps) => {
+  const filtersRef = useRef(filters);
+  filtersRef.current = filters;
+
+  /** Preview while dragging (label); committed `filters.radiusMeters` updates on release. */
+  const [dragRadiusMeters, setDragRadiusMeters] = useState<number | null>(null);
+
+  useEffect(() => {
+    setDragRadiusMeters(null);
+  }, [filters.radiusMeters]);
+
+  const setRating = (minRating: number) =>
+    onChange({ ...filtersRef.current, minRating });
+
+  const onRadiusSliderChange = (value: number) => {
+    if (!Number.isFinite(value)) return;
+    setDragRadiusMeters(roundRadiusMeters(value));
   };
 
+  const onRadiusSliderComplete = (value: number) => {
+    if (!Number.isFinite(value)) return;
+    const radiusMeters = roundRadiusMeters(value);
+    const prevRadius = filtersRef.current.radiusMeters;
+    onChange({ ...filtersRef.current, radiusMeters });
+    if (radiusMeters === prevRadius) {
+      setDragRadiusMeters(null);
+    }
+  };
+
+  const displayedRadiusMeters = dragRadiusMeters ?? filters.radiusMeters;
+
   const setOpenNowOnly = (openNowOnly: boolean) =>
-    onChange({ ...filters, openNowOnly });
+    onChange({ ...filtersRef.current, openNowOnly });
 
   const setIncludeNewLocations = (includeNewLocations: boolean) =>
-    onChange({ ...filters, includeNewLocations });
+    onChange({ ...filtersRef.current, includeNewLocations });
 
   return (
     <View style={styles.wrapper}>
@@ -73,19 +97,14 @@ const SearchFilters = ({ filters, onChange }: SearchFiltersProps) => {
         <View style={styles.sliderHeader}>
           <Text style={styles.sectionLabel}>Avstånd</Text>
           <Text style={styles.sliderValue}>
-            {formatRadiusMeters(filters.radiusMeters)}
+            {formatRadiusMeters(displayedRadiusMeters)}
           </Text>
         </View>
-        <Slider
-          style={styles.slider}
-          minimumValue={MIN_RADIUS_METERS}
-          maximumValue={MAX_RADIUS_METERS_USER}
-          step={100}
-          value={filters.radiusMeters}
-          onValueChange={setRadiusFromSlider}
-          minimumTrackTintColor={COLORS.tertiary}
-          maximumTrackTintColor={COLORS.gray}
-          thumbTintColor={COLORS.tertiary}
+        <RadiusSlider
+          committed={filters.radiusMeters}
+          preview={dragRadiusMeters}
+          onValueChange={onRadiusSliderChange}
+          onSlidingComplete={onRadiusSliderComplete}
         />
         <View style={styles.sliderTicks}>
           <Text style={styles.tickLabel}>100 m</Text>

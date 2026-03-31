@@ -19,7 +19,7 @@ export const MAX_RADIUS_METERS = 50_000;
 export const DEFAULT_FILTERS: SearchFilterState = {
   minRating: 4.5,
   radiusMeters: 3000,
-  openNowOnly: false,
+  openNowOnly: true,
   includeNewLocations: false,
 };
 

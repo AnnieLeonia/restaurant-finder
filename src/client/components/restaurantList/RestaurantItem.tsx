@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 
-import { baseUrl } from "@/client/constants";
+import { baseUrl, icons } from "@/client/constants";
 import { Restaurant } from "@/common/types";
 
 import styles from "./restaurantList.style";
@@ -29,9 +29,16 @@ const HERO_RATIO = 0.52;
 export interface RestaurantItemProps {
   data: RestaurantItemType;
   itemHeight: number;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
-const RestaurantItem = ({ data, itemHeight }: RestaurantItemProps) => {
+const RestaurantItem = ({
+  data,
+  itemHeight,
+  isFavorite = false,
+  onToggleFavorite,
+}: RestaurantItemProps) => {
   const firstPhoto = data.photos?.[0];
   const heroHeight = Math.max(Math.round(itemHeight * HERO_RATIO), 120);
 
@@ -40,17 +47,35 @@ const RestaurantItem = ({ data, itemHeight }: RestaurantItemProps) => {
       onPress={() => Linking.openURL(mapsUrl(data))}
       style={[styles.card, { height: itemHeight }]}
     >
-      {firstPhoto ? (
-        <Image
-          source={{ uri: baseUrl + firstPhoto }}
-          style={[styles.heroImage, { height: heroHeight }]}
-          resizeMode="cover"
-        />
-      ) : (
-        <View style={[styles.heroPlaceholder, { height: heroHeight }]}>
-          <Text style={styles.placeholderText}>Ingen bild</Text>
-        </View>
-      )}
+      <View style={[styles.heroWrap, { height: heroHeight }]}>
+        {firstPhoto ? (
+          <Image
+            source={{ uri: baseUrl + firstPhoto }}
+            style={[styles.heroImage, { height: heroHeight }]}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={[styles.heroPlaceholder, { height: heroHeight }]}>
+            <Text style={styles.placeholderText}>Ingen bild</Text>
+          </View>
+        )}
+        {onToggleFavorite ? (
+          <Pressable
+            style={styles.favoritePressable}
+            onPress={onToggleFavorite}
+            accessibilityRole="button"
+            accessibilityLabel={
+              isFavorite ? "Ta bort från sparade" : "Spara restaurang"
+            }
+          >
+            <Image
+              source={isFavorite ? icons.heart : icons.heartOutline}
+              style={styles.favoriteIcon}
+              resizeMode="contain"
+            />
+          </Pressable>
+        ) : null}
+      </View>
 
       <ScrollView
         style={styles.bodyScroll}

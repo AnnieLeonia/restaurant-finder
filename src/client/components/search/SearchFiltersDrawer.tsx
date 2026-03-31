@@ -95,6 +95,7 @@ const SearchFiltersDrawer = ({
               style={styles.scroll}
               contentContainerStyle={styles.scrollContent}
               keyboardShouldPersistTaps="handled"
+              nestedScrollEnabled
               showsVerticalScrollIndicator
             >
               <SearchFilters filters={filters} onChange={onChange} />
