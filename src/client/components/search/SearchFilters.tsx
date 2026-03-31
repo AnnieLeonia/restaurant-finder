@@ -1,11 +1,11 @@
+import Slider from "@react-native-community/slider";
 import React from "react";
 import { Pressable, ScrollView, Switch, Text, View } from "react-native";
 
 import { COLORS } from "@/client/constants";
 import {
-  DEFAULT_FILTERS,
-  MAX_RADIUS_METERS,
-  RADIUS_PRESETS_METERS,
+  MAX_RADIUS_METERS_USER,
+  MIN_RADIUS_METERS,
   RATING_PRESETS,
   SearchFilterState,
 } from "@/common/searchFilters";
@@ -17,17 +17,31 @@ export interface SearchFiltersProps {
   onChange: (next: SearchFilterState) => void;
 }
 
+function formatRadiusMeters(m: number): string {
+  if (m >= 1000) {
+    const km = m / 1000;
+    return km === Math.floor(km) ? `${km} km` : `${km.toFixed(1)} km`;
+  }
+  return `${m} m`;
+}
+
 const SearchFilters = ({ filters, onChange }: SearchFiltersProps) => {
   const setRating = (minRating: number) => onChange({ ...filters, minRating });
 
-  const setRadius = (radiusMeters: number) =>
-    onChange({
-      ...filters,
-      radiusMeters: Math.min(radiusMeters, MAX_RADIUS_METERS),
-    });
+  const setRadiusFromSlider = (value: number) => {
+    const rounded = Math.round(value / 100) * 100;
+    const radiusMeters = Math.min(
+      MAX_RADIUS_METERS_USER,
+      Math.max(MIN_RADIUS_METERS, rounded),
+    );
+    onChange({ ...filters, radiusMeters });
+  };
 
   const setOpenNowOnly = (openNowOnly: boolean) =>
     onChange({ ...filters, openNowOnly });
+
+  const setIncludeNewLocations = (includeNewLocations: boolean) =>
+    onChange({ ...filters, includeNewLocations });
 
   return (
     <View style={styles.wrapper}>
@@ -55,32 +69,38 @@ const SearchFilters = ({ filters, onChange }: SearchFiltersProps) => {
         ))}
       </ScrollView>
 
-      <Text style={styles.sectionLabel}>Avstånd</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.chipRow}
-      >
-        {RADIUS_PRESETS_METERS.map(m => (
-          <Pressable
-            key={m}
-            onPress={() => setRadius(m)}
-            style={[
-              styles.chip,
-              filters.radiusMeters === m && styles.chipActive,
-            ]}
-          >
-            <Text
-              style={[
-                styles.chipText,
-                filters.radiusMeters === m && styles.chipTextActive,
-              ]}
-            >
-              {m >= 1000 ? `${m / 1000} km` : `${m} m`}
-            </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
+      <View style={styles.sliderBlock}>
+        <View style={styles.sliderHeader}>
+          <Text style={styles.sectionLabel}>Avstånd</Text>
+          <Text style={styles.sliderValue}>
+            {formatRadiusMeters(filters.radiusMeters)}
+          </Text>
+        </View>
+        <Slider
+          style={styles.slider}
+          minimumValue={MIN_RADIUS_METERS}
+          maximumValue={MAX_RADIUS_METERS_USER}
+          step={100}
+          value={filters.radiusMeters}
+          onValueChange={setRadiusFromSlider}
+          minimumTrackTintColor={COLORS.tertiary}
+          maximumTrackTintColor={COLORS.gray}
+          thumbTintColor={COLORS.tertiary}
+        />
+        <View style={styles.sliderTicks}>
+          <Text style={styles.tickLabel}>100 m</Text>
+          <Text style={styles.tickLabel}>10 km</Text>
+        </View>
+      </View>
+
+      <View style={styles.switchRow}>
+        <Text style={styles.switchLabel}>Nya ställen</Text>
+        <Switch
+          value={filters.includeNewLocations}
+          onValueChange={setIncludeNewLocations}
+          trackColor={{ false: COLORS.gray, true: COLORS.tertiary }}
+        />
+      </View>
 
       <View style={styles.switchRow}>
         <Text style={styles.switchLabel}>Öppen nu</Text>
@@ -92,7 +112,9 @@ const SearchFilters = ({ filters, onChange }: SearchFiltersProps) => {
       </View>
 
       <Text style={styles.hint}>
-        Minst {DEFAULT_FILTERS.minReviews} recensioner.
+        {filters.includeNewLocations
+          ? "Minst 10 recensioner (nya ställen)."
+          : "Minst 100 recensioner."}
       </Text>
     </View>
   );

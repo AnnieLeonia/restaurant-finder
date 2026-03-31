@@ -6,7 +6,7 @@ import useFetchRestaurant, {
   RestaurantRequestProps,
 } from "@/client/hook/useFetchRestaurant";
 import useScrollToRandom from "@/client/hook/useScrollToRandom";
-import { SearchFilterState } from "@/common/searchFilters";
+import { SearchFilterState, effectiveMinReviews } from "@/common/searchFilters";
 import { Restaurant, RestaurantsResponse } from "@/common/types";
 import { generateUniqueKey, shuffle } from "@/common/utils";
 
@@ -28,9 +28,12 @@ function applyFilters(
   results: Restaurant[],
   filters: SearchFilterState,
 ): Restaurant[] {
+  const minReviews = effectiveMinReviews(filters);
+  const maxMeters = filters.radiusMeters;
   return results
     .filter(r => r.rating >= filters.minRating)
-    .filter(r => r.reviews >= filters.minReviews)
+    .filter(r => r.reviews >= minReviews)
+    .filter(r => r.distance.meters <= maxMeters)
     .filter(r => {
       if (!filters.openNowOnly) return true;
       return r.open_now === true;

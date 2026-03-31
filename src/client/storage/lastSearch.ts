@@ -16,7 +16,6 @@ export interface LastSearchSnapshot {
   response: RestaurantsResponse;
   /** Results after client filters; used for display parity with saved state. */
   filteredResults: Restaurant[];
-  addressLabel: string;
 }
 
 export async function saveLastSearch(

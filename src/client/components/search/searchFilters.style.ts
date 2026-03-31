@@ -52,6 +52,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.gray,
   },
+  sliderBlock: {
+    paddingVertical: 4,
+  },
+  sliderHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  sliderValue: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: COLORS.black,
+  },
+  slider: {
+    width: "100%",
+    height: 40,
+  },
+  sliderTicks: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  tickLabel: {
+    fontSize: 11,
+    color: COLORS.gray,
+  },
 });
 
 export default styles;

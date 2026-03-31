@@ -7,7 +7,6 @@ import {
   Pressable,
   SafeAreaView,
   Text,
-  TextInput,
   View,
 } from "react-native";
 
@@ -16,7 +15,11 @@ import SearchFilters from "@/client/components/search/SearchFilters";
 import { COLORS, icons } from "@/client/constants";
 import { loadLastSearch, saveLastSearch } from "@/client/storage/lastSearch";
 import styles from "@/client/styles/search";
-import { DEFAULT_FILTERS, SearchFilterState } from "@/common/searchFilters";
+import {
+  DEFAULT_FILTERS,
+  SearchFilterState,
+  parseSearchFilters,
+} from "@/common/searchFilters";
 import { Restaurant, RestaurantsResponse } from "@/common/types";
 
 interface LocationProps {
@@ -40,8 +43,6 @@ const Search = () => {
   const [location, setLocation] = useState<LocationProps | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [filters, setFilters] = useState<SearchFilterState>(DEFAULT_FILTERS);
-  const [addressInput, setAddressInput] = useState("");
-  const [addressLabel, setAddressLabel] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -51,8 +52,7 @@ const Search = () => {
 
       if (saved) {
         setLocation({ lat: saved.lat, lng: saved.lng });
-        setFilters(saved.filters);
-        setAddressLabel(saved.addressLabel);
+        setFilters(parseSearchFilters(saved.filters));
         setHydrating(false);
         return;
       }
@@ -77,55 +77,6 @@ const Search = () => {
     };
   }, []);
 
-  const handleGeocode = async () => {
-    const q = addressInput.trim();
-    if (!q) {
-      setErrorMsg("Ange en adress eller ort.");
-      return;
-    }
-    setErrorMsg("");
-    setIsLoadingCoords(true);
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Tillstånd för plats krävs för att söka adress.");
-        return;
-      }
-      const results = await Location.geocodeAsync(q);
-      if (!results.length) {
-        setErrorMsg("Hittade ingen plats för den adressen.");
-        return;
-      }
-      const first = results[0];
-      setLocation({ lat: first.latitude, lng: first.longitude });
-      setAddressLabel(q);
-    } catch {
-      setErrorMsg("Kunde inte slå upp adressen. Försök igen.");
-    } finally {
-      setIsLoadingCoords(false);
-    }
-  };
-
-  const handleUseMyLocation = async () => {
-    setErrorMsg("");
-    setIsLoadingCoords(true);
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Tillstånd för plats avvisades");
-        return;
-      }
-      const { coords } = await Location.getCurrentPositionAsync({});
-      setLocation({ lat: coords.latitude, lng: coords.longitude });
-      setAddressLabel("");
-      setAddressInput("");
-    } catch {
-      setErrorMsg("Kunde inte hämta din plats.");
-    } finally {
-      setIsLoadingCoords(false);
-    }
-  };
-
   const onPersist = useCallback(
     (payload: { response: RestaurantsResponse; filtered: Restaurant[] }) => {
       if (!location) return;
@@ -138,10 +89,9 @@ const Search = () => {
         filters,
         response: payload.response,
         filteredResults: payload.filtered,
-        addressLabel,
       }).catch(() => {});
     },
-    [location, filters, keyword, addressLabel],
+    [location, filters, keyword],
   );
 
   const showListLoader = hydrating || isLoadingCoords;
@@ -162,33 +112,6 @@ const Search = () => {
           <Image source={icons.chevronLeft} style={styles.backIcon} />
         </Pressable>
         <Text style={styles.headerText}>{keyword || "Anything"}</Text>
-
-        <View style={styles.locationBlock}>
-          <Text style={styles.locationLabel}>Plats</Text>
-          <TextInput
-            value={addressInput}
-            onChangeText={setAddressInput}
-            placeholder="Adress eller ort"
-            placeholderTextColor={COLORS.gray}
-            style={styles.addressInput}
-            onSubmitEditing={handleGeocode}
-            returnKeyType="search"
-          />
-          <View style={styles.locationButtons}>
-            <Pressable style={styles.secondaryButton} onPress={handleGeocode}>
-              <Text style={styles.secondaryButtonText}>Sök plats</Text>
-            </Pressable>
-            <Pressable
-              style={styles.secondaryButton}
-              onPress={handleUseMyLocation}
-            >
-              <Text style={styles.secondaryButtonText}>Min plats</Text>
-            </Pressable>
-          </View>
-          {addressLabel ? (
-            <Text style={styles.addressHint}>Aktiv: {addressLabel}</Text>
-          ) : null}
-        </View>
 
         <SearchFilters filters={filters} onChange={setFilters} />
 
