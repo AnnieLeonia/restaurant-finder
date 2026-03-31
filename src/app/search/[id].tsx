@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 import { Header, Nav, RestaurantList, SearchBar } from "@/client/components";
-import SearchFilters from "@/client/components/search/SearchFilters";
+import SearchFiltersDrawer from "@/client/components/search/SearchFiltersDrawer";
 import { COLORS, icons } from "@/client/constants";
 import { loadLastSearch, saveLastSearch } from "@/client/storage/lastSearch";
 import styles from "@/client/styles/search";
@@ -43,6 +43,7 @@ const Search = () => {
   const [location, setLocation] = useState<LocationProps | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [filters, setFilters] = useState<SearchFilterState>(DEFAULT_FILTERS);
+  const [filtersDrawerOpen, setFiltersDrawerOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -108,12 +109,31 @@ const Search = () => {
       </Header>
 
       <View style={styles.view}>
-        <Pressable onPress={() => router.back()}>
-          <Image source={icons.chevronLeft} style={styles.backIcon} />
-        </Pressable>
+        <View style={styles.toolbarRow}>
+          <Pressable
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Tillbaka"
+          >
+            <Image source={icons.chevronLeft} style={styles.backIcon} />
+          </Pressable>
+          <Pressable
+            onPress={() => setFiltersDrawerOpen(true)}
+            style={styles.filterButton}
+            accessibilityRole="button"
+            accessibilityLabel="Filter"
+          >
+            <Image source={icons.filter} style={styles.filterIcon} />
+          </Pressable>
+        </View>
         <Text style={styles.headerText}>{keyword || "Anything"}</Text>
 
-        <SearchFilters filters={filters} onChange={setFilters} />
+        <SearchFiltersDrawer
+          visible={filtersDrawerOpen}
+          onClose={() => setFiltersDrawerOpen(false)}
+          filters={filters}
+          onChange={setFilters}
+        />
 
         {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
 

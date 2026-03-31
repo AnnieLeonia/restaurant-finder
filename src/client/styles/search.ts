@@ -10,9 +10,25 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
   },
+  toolbarRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 4,
+  },
+  filterButton: {
+    padding: 0,
+  },
+  filterIcon: {
+    width: 50,
+    height: 50,
+  },
   headerText: {
     textTransform: "uppercase",
     fontSize: 20,
+    marginTop: 4,
+    marginBottom: 8,
+    paddingHorizontal: 4,
   },
   backIcon: {
     width: 50,

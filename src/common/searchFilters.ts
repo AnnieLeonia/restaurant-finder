@@ -36,11 +36,10 @@ export function parseSearchFilters(raw: unknown): SearchFilterState {
     return { ...DEFAULT_FILTERS };
   }
 
+  /** Only restore when explicitly stored; default stays off (min 100 reviews). */
   let includeNewLocations = DEFAULT_FILTERS.includeNewLocations;
   if (typeof o.includeNewLocations === "boolean") {
     includeNewLocations = o.includeNewLocations;
-  } else if (typeof o.minReviews === "number") {
-    includeNewLocations = o.minReviews <= 10;
   }
 
   let radiusMeters = DEFAULT_FILTERS.radiusMeters;
