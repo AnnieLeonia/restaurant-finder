@@ -41,3 +41,13 @@ export function shuffle<T>(_array: T[]) {
 
 export const generateUniqueKey = () =>
   `_${Math.random().toString(36).substring(2)}`;
+
+/** Drop synthetic `id` used only as FlatList key (not part of Google payload). */
+export function omitListItemId<T extends { id: string }>(
+  item: T,
+): Omit<T, "id"> {
+  const entries = Object.entries(item as Record<string, unknown>).filter(
+    ([k]) => k !== "id",
+  );
+  return Object.fromEntries(entries) as Omit<T, "id">;
+}

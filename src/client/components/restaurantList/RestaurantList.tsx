@@ -1,37 +1,93 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  LayoutChangeEvent,
+  Text,
+  View,
+} from "react-native";
 
+import { COLORS } from "@/client/constants";
+import { useFavorites } from "@/client/context/FavoritesContext";
 import useFetchRestaurant, {
   RestaurantRequestProps,
-} from "@/client//hook/useFetchRestaurant";
-import { COLORS } from "@/client/constants";
+} from "@/client/hook/useFetchRestaurant";
 import useScrollToRandom from "@/client/hook/useScrollToRandom";
-import { generateUniqueKey, shuffle } from "@/common/utils";
+import { SearchFilterState, effectiveMinReviews } from "@/common/searchFilters";
+import { Restaurant, RestaurantsResponse } from "@/common/types";
+import { generateUniqueKey, omitListItemId, shuffle } from "@/common/utils";
 
-import RestaurantItem, {
-  ITEM_HEIGHT,
-  RestaurantItemType,
-} from "./RestaurantItem";
+import RestaurantItem, { RestaurantItemType } from "./RestaurantItem";
 import styles from "./restaurantList.style";
 
-const RestaurantList = (props: RestaurantRequestProps) => {
-  const { data, isLoading, error } = useFetchRestaurant(props);
+export interface RestaurantListProps extends RestaurantRequestProps {
+  filters: SearchFilterState;
+  /** Increment (e.g. from a "randomize again" button) to reshuffle the list and scroll like on first load. */
+  randomizeTrigger?: number;
+  onPersist?: (payload: {
+    response: RestaurantsResponse;
+    filtered: Restaurant[];
+  }) => void;
+}
+
+function applyFilters(
+  results: Restaurant[],
+  filters: SearchFilterState,
+): Restaurant[] {
+  const minReviews = effectiveMinReviews(filters);
+  const maxMeters = filters.radiusMeters;
+  return results
+    .filter(r => r.rating >= filters.minRating)
+    .filter(r => r.reviews >= minReviews)
+    .filter(r => r.distance.meters <= maxMeters)
+    .filter(r => {
+      if (!filters.openNowOnly) return true;
+      return r.open_now === true;
+    });
+}
+
+const RestaurantList = (props: RestaurantListProps) => {
+  const { filters, onPersist, randomizeTrigger = 0, ...requestProps } = props;
+  const { data, isLoading, error } = useFetchRestaurant(requestProps);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const restaurants = useMemo(
-    () =>
-      data.results
-        .filter(restaurant => restaurant.distance.minutes < 20)
-        .filter(restaurant => restaurant.rating > 3.8),
-    [data.results],
+    () => applyFilters(data.results, filters),
+    [data.results, filters],
   );
+
   const [listItems, setListItems] = useState<RestaurantItemType[]>([]);
   const [ref, scrollToRandom] = useScrollToRandom();
+  const [listHeight, setListHeight] = useState(0);
+
+  const onListLayout = useCallback((e: LayoutChangeEvent) => {
+    const h = Math.round(e.nativeEvent.layout.height);
+    if (h > 0) setListHeight(h);
+  }, []);
 
   useEffect(() => {
+    if (isLoading || error) return;
+    onPersist?.({ response: data, filtered: restaurants });
+  }, [data, isLoading, error, filters, restaurants, onPersist]);
+
+  useEffect(() => {
+    if (restaurants.length === 0) {
+      setListItems([]);
+      return;
+    }
     const shuffled = shuffle(restaurants);
     const looped = Array.from({ length: 10 }, () => shuffled).flat();
     setListItems(looped.map(item => ({ ...item, id: generateUniqueKey() })));
-  }, [restaurants]);
+  }, [restaurants, randomizeTrigger]);
+
+  useEffect(() => {
+    if (randomizeTrigger === 0) return;
+    if (listHeight === 0 || restaurants.length === 0) return;
+    const t = setTimeout(() => {
+      scrollToRandom(restaurants.length);
+    }, 150);
+    return () => clearTimeout(t);
+  }, [randomizeTrigger, listHeight, restaurants.length, scrollToRandom]);
 
   return (
     <View style={styles.container}>
@@ -43,57 +99,82 @@ const RestaurantList = (props: RestaurantRequestProps) => {
       ) : error ? (
         <Text>Error: {error.message}</Text>
       ) : restaurants.length > 0 && listItems.length > 0 ? (
-        <>
-          <FlatList
-            ref={ref}
-            keyExtractor={item => item.id}
-            getItemLayout={(_data, index) => ({
-              length: ITEM_HEIGHT,
-              offset: ITEM_HEIGHT * index,
-              index,
-            })}
-            data={listItems}
-            renderItem={({ item }) => (
-              <RestaurantItem key={item.id} data={item} />
-            )}
-            onLayout={async () => {
-              scrollToRandom(restaurants.length);
-            }}
-            onStartReached={() => {
-              return new Promise(resolve => {
-                setListItems(prev =>
-                  shuffle(restaurants)
-                    .map(item => ({ ...item, id: generateUniqueKey() }))
-                    .concat(prev.slice(0, -restaurants.length)),
-                );
-                resolve(null);
-              });
-            }}
-            onEndReached={() => {
-              return new Promise(resolve => {
-                setListItems(prev =>
-                  prev.slice(restaurants.length).concat(
-                    shuffle(restaurants).map(item => ({
-                      ...item,
-                      id: generateUniqueKey(),
-                    })),
-                  ),
-                );
-                resolve(null);
-              });
-            }}
-            onScrollToIndexFailed={info => {
-              console.error(info);
-            }}
-            onStartReachedThreshold={1}
-            onEndReachedThreshold={1}
-            showsHorizontalScrollIndicator={false}
-          />
-          <Text style={styles.cachedText}>
-            {data.cached ? "Cached data" : "Live data"}
-          </Text>
-        </>
-      ) : null}
+        <View style={styles.listWrapper} onLayout={onListLayout}>
+          {listHeight > 0 ? (
+            <>
+              <FlatList
+                ref={ref}
+                style={styles.flatList}
+                keyExtractor={item => item.id}
+                getItemLayout={
+                  listHeight > 0
+                    ? (_data, index) => ({
+                        length: listHeight,
+                        offset: listHeight * index,
+                        index,
+                      })
+                    : undefined
+                }
+                data={listItems}
+                extraData={listHeight}
+                renderItem={({ item }) => (
+                  <RestaurantItem
+                    data={item}
+                    itemHeight={listHeight}
+                    isFavorite={isFavorite(item.place_id)}
+                    onToggleFavorite={() =>
+                      toggleFavorite(omitListItemId(item) as Restaurant)
+                    }
+                  />
+                )}
+                onLayout={async () => {
+                  scrollToRandom(restaurants.length);
+                }}
+                onStartReached={() => {
+                  return new Promise(resolve => {
+                    setListItems(prev =>
+                      shuffle(restaurants)
+                        .map(item => ({ ...item, id: generateUniqueKey() }))
+                        .concat(prev.slice(0, -restaurants.length)),
+                    );
+                    resolve(null);
+                  });
+                }}
+                onEndReached={() => {
+                  return new Promise(resolve => {
+                    setListItems(prev =>
+                      prev.slice(restaurants.length).concat(
+                        shuffle(restaurants).map(item => ({
+                          ...item,
+                          id: generateUniqueKey(),
+                        })),
+                      ),
+                    );
+                    resolve(null);
+                  });
+                }}
+                onScrollToIndexFailed={info => {
+                  console.error(info);
+                }}
+                onStartReachedThreshold={1}
+                onEndReachedThreshold={1}
+                showsVerticalScrollIndicator={false}
+                snapToInterval={listHeight}
+                snapToAlignment="start"
+                decelerationRate="fast"
+                removeClippedSubviews={false}
+              />
+              <View style={styles.cachedOverlayWrap} pointerEvents="none">
+                <Text style={styles.cachedOverlay}>
+                  {data.cached ? "Cached data" : "Live data"}
+                </Text>
+              </View>
+            </>
+          ) : null}
+        </View>
+      ) : (
+        <Text>Inga restauranger matchar dina filter.</Text>
+      )}
     </View>
   );
 };

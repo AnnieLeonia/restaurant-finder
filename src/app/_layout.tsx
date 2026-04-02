@@ -2,6 +2,9 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import { FavoritesProvider } from "@/client/context/FavoritesContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,7 +25,13 @@ const Layout = () => {
     return null;
   }
 
-  return <Stack />;
+  return (
+    <SafeAreaProvider>
+      <FavoritesProvider>
+        <Stack />
+      </FavoritesProvider>
+    </SafeAreaProvider>
+  );
 };
 
 export default Layout;

@@ -17,7 +17,7 @@ const Nav = () => {
           style={styles.navIcon}
           resizeMode="contain"
         />
-        <Text>Home</Text>
+        <Text>Hem</Text>
       </Pressable>
 
       <Pressable style={styles.navBtn} onPress={() => router.push("/saved/")}>
@@ -26,7 +26,7 @@ const Nav = () => {
           style={styles.navIcon}
           resizeMode="contain"
         />
-        <Text>Saved</Text>
+        <Text>Sparat</Text>
       </Pressable>
 
       <Pressable style={styles.navBtn} onPress={() => router.push("/profile/")}>
@@ -35,7 +35,7 @@ const Nav = () => {
           style={styles.navIcon}
           resizeMode="contain"
         />
-        <Text>Profile</Text>
+        <Text>Profil</Text>
       </Pressable>
     </View>
   );
